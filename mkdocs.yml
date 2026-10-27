@@ -1,5 +1,5 @@
-site_name: Aneepay Docs
-site_description: Documentation for the Aneepay platform
+site_name: AneePay Docs
+site_description: "AneePay documentation: crypto payment acceptance, CMS plugins, x402, and API"
 site_url: https://aneepay.github.io/aneepay-docs/
 repo_url: https://github.com/aneepay/aneepay-docs
 repo_name: aneepay/aneepay-docs
@@ -21,7 +21,9 @@ theme:
         name: Switch to light mode
   features:
     - navigation.sections
+    - navigation.indexes
     - navigation.top
+    - navigation.tracking
     - navigation.footer
     - search.highlight
     - content.code.copy
@@ -44,19 +46,14 @@ markdown_extensions:
       permalink: true
 
 nav:
-  - Getting Started:
-      - index.md
-      - quickstart.md
-  - Guides:
-      - guides/getting-started.md
-      - guides/payments.md
-      - guides/webhooks.md
-  - API:
-      - api/overview.md
-      - api/authentication.md
-      - api/endpoints.md
-  - About:
-      - about.md
+  - Home: index.md
+  - Merchant: merchant/index.md
+  - CMS: cms/index.md
+  - x402: x402/index.md
+  - Partner: partner/index.md
+  - API: api/index.md
+  - Developers: developers/index.md
+  - Reference: reference/index.md
 
 plugins:
   - search
