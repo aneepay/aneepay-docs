@@ -34,7 +34,11 @@ theme:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
@@ -47,7 +51,37 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Merchant: merchant/index.md
+  - Getting started:
+      - Product overview: getting-started/overview.md
+      - Quickstart: getting-started/quickstart.md
+      - Account setup: getting-started/account-setup.md
+      - Payment lifecycle: getting-started/payment-lifecycle.md
+      - Glossary: getting-started/glossary.md
+  - Merchant:
+      - merchant/index.md
+      - Payment acceptance:
+          - Create a payment: payments/create-payment.md
+          - Hosted checkout and dApp: payments/checkout-and-dapp.md
+          - Status and polling: payments/status-and-polling.md
+          - Split payments: payments/split-payments.md
+          - Reconciliation: payments/reconciliation.md
+          - Networks, tokens, and fees: payments/networks-tokens-fees.md
+          - Amounts, rounding, and limits: payments/amounts-rounding-and-limits.md
+          - Refunds and non-features: payments/refunds-cancellations-and-non-features.md
+          - Security and privacy: payments/security-and-privacy.md
+          - Idempotency and retries: payments/idempotency-and-retries.md
+      - Webhooks:
+          - Webhooks overview: webhooks/overview.md
+          - Payload and signature: webhooks/payload-and-signature.md
+          - Delivery, retries, idempotency: webhooks/delivery-retries-idempotency.md
+          - Testing and replay: webhooks/testing-and-replay.md
+  - Errors, sandbox, and support:
+      - Errors: errors/index.md
+      - Sandbox: sandbox.md
+      - Testing your integration: testing-your-integration.md
+      - Security best practices: security/best-practices.md
+      - Troubleshooting: troubleshooting.md
+      - FAQ: faq.md
   - CMS: cms/index.md
   - x402: x402/index.md
   - Partner: partner/index.md

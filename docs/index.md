@@ -1,22 +1,60 @@
 # AneePay
 
-AneePay is a non-custodial crypto payment system for accepting payments on Polygon. Funds go directly to the merchant's wallet; the platform does not hold them and does not require KYC.
+AneePay is a **strictly non-custodial** crypto payment gateway on **Polygon (PoS)**.
+It accepts ERC-20 stablecoins — **USDT, USDC, DAI** — and sends funds directly from
+the payer to your wallet. The platform never holds or controls your assets.
 
-## Key facts
+| Property | Detail |
+| --- | --- |
+| Non-custodial | Payer → smart contract → merchant wallet. No custody. |
+| Fee | Flat **0.5%**, deducted on-chain by the contract. |
+| KYC | None for payments or integration. Onboarding is an automated domain reputation check. |
+| Hosted checkout | Ready-made payment page (QR + MetaMask) hosted by AneePay. |
+| Webhooks | Signed server-to-server notifications on successful payments. |
+| Sandbox | Amoy testnet payments for development without real funds. |
 
-- Platform fee: 0.5% per payment.
-- Tokens: USDT, USDC, DAI (ERC-20).
-- Networks: Polygon mainnet (137) and Amoy testnet (80002).
-- Hosted checkout with QR code and MetaMask.
-- Payment notifications via HMAC-SHA256-signed webhooks.
-- x402 protocol for AI agents.
+**Base URL:** `https://api.aneepay.com` (unversioned) — full reference at
+[`/redoc`](https://api.aneepay.com/redoc).
+
+## Who is this for
+
+=== "Merchant / online store"
+    Accept crypto payments on your site: onboarding, first payment, webhooks,
+    reconciliation. Start with the [Getting started](getting-started/overview.md)
+    section, or install a ready-made [CMS plugin](cms/index.md).
+
+=== "Custom integration"
+    You write your own backend: [Quickstart](getting-started/quickstart.md),
+    then the [API](api/index.md) and [webhooks](webhooks/overview.md).
+
+=== "AI agent / machine payments"
+    Pay-per-request over HTTP with the x402 protocol: see
+    [x402](x402/index.md).
+
+=== "Partner"
+    Earn 10% of the platform fee from referred merchants: see
+    [Partner program](partner/index.md).
+
+=== "Self-hosting / contributor"
+    Run or study the stack: [Developers](developers/index.md).
 
 ## Sections
 
-- [Merchant](merchant/index.md) — accepting payments, webhooks, sandbox, merchant dashboard.
-- [CMS](cms/index.md) — ready-made plugins for WooCommerce, OpenCart, and PrestaShop.
-- [x402](x402/index.md) — payments for AI agents and the SDK.
-- [Partner](partner/index.md) — partner program and payouts.
-- [API](api/index.md) — endpoints, authentication, and errors.
-- [Developers](developers/index.md) — architecture, contracts, testing, and operations.
-- [Reference](reference/index.md) — statuses, networks, tokens, and error codes.
+- [Getting started](getting-started/overview.md) — product model, quickstart,
+  account setup, payment lifecycle, glossary.
+- [Merchant](merchant/index.md) — payments, split payments, webhooks, sandbox.
+- [CMS](cms/index.md) — plugins for WooCommerce, OpenCart, PrestaShop.
+- [x402](x402/index.md) — protocol, SDK, facilitator API.
+- [Partner](partner/index.md) — referral program and payouts.
+- [API](api/index.md) — endpoints, authentication, errors.
+- [Developers](developers/index.md) — architecture, contracts, testing, operations.
+- [Reference](reference/index.md) — statuses, networks, tokens, error codes.
+
+## Useful links
+
+- [Website](https://aneepay.com) · [Terms](https://aneepay.com/tos/) ·
+  [Privacy](https://aneepay.com/privacy/)
+- [API docs (ReDoc)](https://api.aneepay.com/redoc) ·
+  [OpenAPI JSON](https://api.aneepay.com/openapi.json)
+- [Smart contracts on Polygonscan](https://polygonscan.com/address/0x7AB120ac5060997B5c9AB2F3e891273dd686b8A2#code)
+- [GitHub](https://github.com/aneepay) · [Support (Telegram)](https://t.me/aneepay)
