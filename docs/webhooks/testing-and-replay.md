@@ -1,15 +1,17 @@
-# Testing and replay
+# Testing webhooks
 
-How to exercise the webhook pipeline safely: a local receiver, sandbox end-to-end
-drills, failure injection, and how events are recovered when something went wrong.
+How to exercise the webhook pipeline safely: a public test endpoint, sandbox
+end-to-end drills, failure injection, and how to recover when something went wrong.
 
-## 1. Local receiver
+## 1. Public test endpoint
 
-In local development the SSRF guard is disabled (`DEBUG`), so `status_url` may point at
-localhost:
+AneePay delivers webhooks only to public URLs. To test from a laptop or a
+private network, run your receiver locally and expose it through a public HTTPS
+tunnel (ngrok, Cloudflare Tunnel, or similar), then use the tunnel URL as the
+account's `status_url`.
 
 ```python
-# local_receiver.py — run with: python local_receiver.py
+# receiver.py — run with: python receiver.py
 import hashlib
 import hmac
 import json
@@ -28,18 +30,17 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200 if ok else 401)
         self.end_headers()
 
-HTTPServer(("127.0.0.1", 8765), Handler).serve_forever()
+HTTPServer(("0.0.0.0", 8765), Handler).serve_forever()
 ```
 
-Set the account's `status_url` to `http://127.0.0.1:8765/webhook`, then create a
-sandbox payment and watch the event arrive.
+Expose port 8765 through the tunnel and copy the public HTTPS URL it prints
+(for example `https://<tunnel-host>/webhook`) into the account's `status_url`.
+Then create a sandbox payment and watch the event arrive.
 
-!!! note "Production-like local testing"
+!!! note "Keep the receiver reachable"
 
-    Outside `DEBUG`, `localhost` and private addresses are rejected as webhook
-    targets. To test the production code path from a laptop, expose the receiver
-    through a public tunnel (ngrok, Cloudflare Tunnel) and use the tunnel URL as
-    `status_url`.
+    A non-2xx response, a timeout, or a connection error counts as a failed
+    attempt and is retried. Keep the receiver running for the whole drill.
 
 ## 2. End-to-end drill with sandbox
 
@@ -48,8 +49,8 @@ The fastest full-pipeline test (create → pay → confirm → webhook):
 1. Create a payment with `?sandbox=yes` — the Amoy testnet, test USDC, no real funds
    (see [Sandbox](../sandbox.md)).
 2. Complete the payment on the hosted checkout with MetaMask on Amoy.
-3. After 12 Amoy confirmations the listener flips the payment to `success` and the
-   outbox delivers a webhook with `network: "amoy"` and `is_sandbox: true`.
+3. After 12 Amoy confirmations AneePay marks the payment `success` and delivers a
+   webhook with `network: "amoy"` and `is_sandbox: true`.
 4. Assert in your handler: signature valid, `event_id` matches your order,
    `is_sandbox == true` → **do not** ship real goods.
 
@@ -60,11 +61,11 @@ fields — treat them as production-shaped traffic for everything except fulfill
 
 | Drill                         | How to simulate                                | What you should observe                                    |
 | ----------------------------- | ---------------------------------------------- | ---------------------------------------------------------- |
-| Signature rejection           | Change one byte of the body / wrong secret     | Your endpoint returns 401; platform retries; event never applied |
+| Signature rejection           | Change one byte of the body / wrong secret     | Your endpoint returns 401; AneePay retries; event never applied |
 | Endpoint down                 | Stop the receiver                               | Attempts 1–8 with exponential backoff (~4 min window)      |
 | Slow handler                  | `sleep 11` before responding                   | Sender times out at 10 s, retries; your idempotency absorbs the duplicate |
 | Flaky 5xx                     | Return 500 for the first N requests            | Retries continue; once you return 2xx the delivery stops   |
-| Terminal failure recovery     | Keep failing through all 8 attempts            | Delivery status becomes `failed`; recover via operator replay or reconciliation |
+| Terminal failure              | Keep failing through all 8 attempts            | Delivery status becomes `failed`; recover by reconciliation |
 | Lost 2xx                      | Process, then kill the connection before ACK   | Duplicate arrives later; dedupe by `event_id`              |
 
 !!! warning "Duplicates are the normal case in drills"
@@ -73,22 +74,15 @@ fields — treat them as production-shaped traffic for everything except fulfill
     creates two orders or double-credits a balance, your handler is not idempotent —
     fix that before going live.
 
-## 4. Replay
+## 4. Recovery after terminal failure
 
-Replay is an **operator-side** action (there is no merchant API for it). Selecting a
-delivery in the platform admin and running *Replay*:
-
-- resets the delivery to `pending`, `attempts = 0`;
-- keeps `event_id` and the **payload unchanged**;
-- re-enqueues delivery immediately.
-
-Because `event_id` and the body are identical to the original attempt, your receiver
-must treat replay exactly like a retry: verify, dedupe by `event_id`, respond 2xx.
-Replay after a fix (e.g., you had a signature bug) is therefore safe.
+After the final failed attempt the delivery is marked `failed` and is not retried
+automatically. There is no merchant API to request a redelivery.
 
 If you suspect missed events — for example your endpoint was down beyond the retry
-window — do not wait for a replay: reconcile directly with
-[the payments list](../payments/reconciliation.md) and backfill.
+window — reconcile directly: page through
+[the payments list](../payments/reconciliation.md) with `status=success` and
+backfill the orders you still have open.
 
 ## 5. Common failures checklist
 
@@ -105,10 +99,10 @@ window — do not wait for a replay: reconcile directly with
 
 ## 6. Contract validation
 
-The payload is validated against the JSON Schema
-`docs/schemas/webhook-v1.schema.json` in the platform repository. Schema violations
-are a platform bug — report them; do not guess missing fields. `additionalProperties:
-false` means today's field set is exhaustive for `version: 1`.
+The v1 payload is defined by the public JSON Schema at
+<https://aneepay.com/schemas/webhook-v1.json>. Schema violations are a platform
+bug — report them; do not guess missing fields. The schema forbids extra
+properties, so the field set for `version: 1` is exhaustive.
 
 ## Next
 

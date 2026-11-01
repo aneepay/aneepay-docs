@@ -38,10 +38,8 @@ both, so treat duplicates as a bug in your integration.
   and disables the button while a transaction is in flight.
 - The Standard contract itself has **no on-chain replay guard**: a second
   `processPayment` with the same parameters would transfer funds a second
-  time. This is a known, accepted trade-off (documented in the project's
-  tech-debt ledger); compensations are the dApp guards above and a
-  listener-side check that the event's recipient matches the account wallet
-  before confirming.
+  time. The checkout dApp guards above are the main protection: always confirm
+  the payment status before allowing another attempt.
 - **If you build a custom client:** never re-send `processPayment` for a
   payment you already know is `success`, and never instruct a customer to
   "try the transaction again" without first checking status.
@@ -54,13 +52,11 @@ the same operation with the same parameters cannot be executed twice on-chain.
 
 ## Webhooks: at-least-once, make them idempotent on your side
 
-- Deliveries are **at-least-once**: a durable outbox retries up to **8
-  attempts** with exponential backoff (base 2 s, cap 300 s) until you return
-  `2xx`.
-- `event_id` and the payload are **stable across retries and manual replays**
-  — the same event always carries the same `event_id`.
-- Replays (including admin-initiated ones) can therefore deliver an event you
-  have already processed.
+- Deliveries are **at-least-once**: AneePay retries up to **8 attempts** with
+  exponential backoff (base 2 s, cap 300 s) until you return `2xx`.
+- `event_id` and the payload are **stable across retries** — the same event
+  always carries the same `event_id`.
+- A retry can therefore deliver an event you have already processed.
 
 Your endpoint must be idempotent by `event_id` (or by `operation_id`):
 

@@ -8,7 +8,6 @@ Reference data for AneePay: networks, tokens, statuses, and error codes.
 |---|---|---|
 | Polygon mainnet | 137 | Payment acceptance |
 | Amoy testnet | 80002 | Sandbox and testing |
-| Anvil | 31337 | Local development |
 
 ## Polygon mainnet tokens
 
@@ -31,10 +30,8 @@ Reference data for AneePay: networks, tokens, statuses, and error codes.
 | `pending` | Payment created and awaiting payment |
 | `success` | Payment confirmed on-chain |
 | `failed` | Payment failed |
-| `cancelled` | Payment cancelled manually by an administrator |
 
 ## Related sections
 
 - [API](../api/index.md) — endpoints and error format.
 - [Merchant](../merchant/index.md) — payment acceptance scenarios.
-- [Developers](../developers/index.md) — contracts and deployment.

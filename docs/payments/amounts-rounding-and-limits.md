@@ -1,14 +1,15 @@
 # Amounts, rounding, and limits
 
-One payment amount passes through four layers: your request → the API → the
-database → the smart contract. Each layer has explicit rounding rules.
+The API request, the stored payment, and the smart contract each apply explicit
+rounding rules.
 
 ## At the API layer
 
 - `amount` must be a decimal **greater than zero**. It may be sent as a JSON
-  number or a numeric string.
-- It is **rounded to 2 decimal places** with `ROUND_HALF_UP` (banker's-style
-  half-up: `0.005` → `0.01`) as soon as the request is validated.
+  number or a numeric string; prefer a string to avoid floating-point rounding
+  in your own code.
+- It is **rounded to 2 decimal places** with `ROUND_HALF_UP` (round half up:
+  `0.005` → `0.01`) as soon as the request is validated.
 - Values are serialized back as strings with at least two fraction digits and
   no unnecessary trailing zeros (`19.50`, `10.00`).
 - No explicit maximum amount is enforced by the schema.
@@ -24,13 +25,16 @@ assert round_amount(Decimal("0.005")) == Decimal("0.01")
 assert round_amount(Decimal("1.234")) == Decimal("1.23")
 ```
 
-## In the database
+## Stored precision
 
-- The amount column is `Numeric(16,6)` — up to **6 decimal places** are
-  stored, so micro-amounts used by machine payments (e.g. `0.0005`) are not
-  truncated.
-- API responses re-format the stored value: minimum 2 digits, trailing zeros
-  stripped (`19.500000` → `19.50`, `0.000500` → `0.0005`).
+- AneePay stores amounts with up to **6 decimal places**, but a standard
+  `POST /payments/` amount is still subject to the 2-decimal rounding described
+  above. The extra stored precision matters for machine-payment paths such as
+  [x402](../x402/index.md), where sub-cent amounts are settled directly and do
+  not pass through the checkout rounding.
+- API responses re-format stored values: minimum 2 digits, trailing zeros
+  stripped (`19.500000` → `19.50`). Values from machine-payment paths may retain
+  up to 6 decimals.
 
 ## On-chain (the contract)
 

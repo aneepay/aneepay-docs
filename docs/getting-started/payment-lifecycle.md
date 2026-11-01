@@ -9,7 +9,7 @@ you can (and cannot) rely on.
 ```mermaid
 stateDiagram-v2
     [*] --> pending: POST /payments/
-    pending --> success: PAYMENT_CONFIRMATIONS blocks after PaymentProcessed
+    pending --> success: 12 blocks after PaymentProcessed
     pending --> failed: transaction rejected / not paid
     success --> [*]
     failed --> [*]
@@ -20,11 +20,6 @@ stateDiagram-v2
 | `pending` | Created; waiting for the customer to pay and for on-chain finality. | no |
 | `success` | Payment confirmed on-chain; webhook delivered. | yes |
 | `failed` | Customer's transaction was rejected or never paid. | yes |
-
-!!! note "`cancelled` is not a customer scenario"
-    The database also contains a technical status `cancelled`, used only for
-    admin/manual operations. It is **not** part of the public contract — never
-    map it to a customer-facing flow.
 
 ## `operation_id`: the link between API and chain
 
@@ -43,12 +38,11 @@ to your business entities.
 ## Confirmations and finality
 
 1. The customer's transaction lands on Polygon and emits `PaymentProcessed`.
-2. The listener persists a durable pending event (nothing is lost if a
-   process restarts).
-3. The listener waits until the transaction reaches **finality** —
-   `PAYMENT_CONFIRMATIONS` blocks (default: **12** on Polygon).
-4. Only then does the payment become `success`, and the webhook is written to
-   a durable outbox for delivery.
+2. AneePay records the on-chain event as soon as it appears.
+3. AneePay waits until the transaction reaches **finality** — **12** blocks on
+   Polygon by default.
+4. Only then does the payment become `success`, and the webhook is queued for
+   delivery.
 
 So a payment can be visible on-chain and still be `pending` for a short while —
 that is the confirmation window. On Polygon this is typically seconds; if you

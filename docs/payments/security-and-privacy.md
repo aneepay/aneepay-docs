@@ -23,7 +23,7 @@ The payment `description` is:
 
 A payment's `id` is **not a secret**: it is derivable from the on-chain
 `operation_id` (`uuid.UUID(int=operation_id)`), so anyone who watches the
-chain for a payment can reconstruct the UUID and read the payment (ADR 0009).
+chain for a payment can reconstruct the UUID and read the payment.
 
 Therefore:
 
@@ -35,14 +35,14 @@ The API accepts up to 500 characters, but brevity is also privacy.
 
 ## `GET /payments/{id}` is public by design
 
-This is intentional (ADR 0009): requiring a key would give a false sense of
-secrecy, since the payment UUID is already recoverable from the public chain.
-What it means in practice:
+This is intentional: requiring a key would give a false sense of secrecy, since
+the payment UUID is already recoverable from the public chain. What it means in
+practice:
 
 - Anyone who learns a payment UUID can read that payment's status, amount,
   token, network, and `description` — another reason the `description` must
   stay free of PII.
-- Payment `id`s are safe to show to the **owning** customer (e.g. in a order
+- Payment `id`s are safe to show to the **owning** customer (e.g. on an order
   confirmation page) but should not be printed on public marketing materials.
 
 Fields that do **not** appear in the public response: your `account_id`, your
@@ -87,14 +87,14 @@ Two independent protections on payment creation:
   (`?sandbox=yes`) bypasses this check.
 
 A nonexistent account is also reported as 403 (not 404), so the API does not
-reveal whether an account UUID exists (ADR 0003).
+reveal whether an account UUID exists.
 
 ## Network surface
 
-- CORS is disabled by default: the API is server-to-server, not a browser API
-  (ADR 0003).
-- Rate limiting is enforced at the CDN/edge layer (Cloudflare), not in the
-  application.
+- The API is server-to-server, not a browser API; cross-origin browser requests
+  are not supported.
+- Rate limiting is applied before requests reach the API. If you exceed it you
+  receive `429` — retry with backoff.
 
 ## Checklist
 

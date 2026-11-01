@@ -41,8 +41,8 @@ arrives. Funds go directly to your wallet — AneePay is strictly non-custodial.
 - [Payload and signature](../webhooks/payload-and-signature.md) — the v1
   contract and HMAC-SHA256 verification.
 - [Delivery, retries, idempotency](../webhooks/delivery-retries-idempotency.md) —
-  outbox, backoff, at-least-once.
-- [Testing and replay](../webhooks/testing-and-replay.md) — local receiver,
+  retries, backoff, at-least-once.
+- [Testing webhooks](../webhooks/testing-and-replay.md) — public endpoint setup,
   sandbox drills, recovery.
 
 ## Also here

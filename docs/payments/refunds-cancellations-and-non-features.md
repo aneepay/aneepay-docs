@@ -24,10 +24,6 @@ A customer **cannot cancel** a payment:
 - No webhook or status change is ever triggered by a customer abandoning a
   payment.
 
-The internal status `cancelled` exists only for **admin/manual operations**
-by the AneePay team; it is not part of the merchant-facing contract and
-merchants should not expect it.
-
 **What this means for you:** a `pending` payment may sit forever. Set your
 own expiry policy — e.g. treat payments still `pending` after N minutes as
 abandoned, and never reserve stock until the payment is `success`.
@@ -64,7 +60,6 @@ token) to the contract address reverts.
 | --- | --- |
 | Refunds | Off-chain, merchant-initiated; not an API feature |
 | Customer cancel | Not supported; abandoned checkouts stay `pending` |
-| `cancelled` status | Internal/admin only; not a merchant scenario |
 | Subscriptions / recurring | Not supported |
 | Custody / withdrawal | Not supported (non-custodial) |
 | Fiat payments | Not supported |

@@ -3,7 +3,7 @@
 AneePay notifies your backend about completed payments with signed **server-to-server
 webhooks**. A webhook is the primary status channel: it is emitted only after the
 on-chain payment is confirmed, carries the final numbers (fee, net amount, transaction
-hash), and is retried from a durable outbox until you acknowledge it.
+hash), and is retried until you acknowledge it.
 
 Polling [`GET /payments/{id}`](../payments/status-and-polling.md) works too, but webhooks
 remove polling lag and the need to correlate on your schedule.
@@ -23,26 +23,23 @@ confirmed on-chain (12 confirmations by default, see
 
 ## Delivery pipeline
 
-Outbox pattern: the delivery record is written in the same database transaction that
-marks the payment `success`, then sent by a separate worker. A crash or endpoint outage
-never loses the event — the sweeper keeps retrying.
+A delivery is created when the payment becomes `success` and is sent to your
+endpoint as soon as it is safe to do so. If an attempt fails, AneePay retries it
+automatically; a crash or endpoint outage never silently drops the event.
 
 ```mermaid
 sequenceDiagram
-    participant L as Listener
-    participant DB as PostgreSQL (outbox)
-    participant W as Webhook worker
+    participant A as AneePay
     participant M as Merchant status_url
 
-    L->>DB: payment success + WebhookDelivery (pending, frozen payload)
-    W->>M: POST payload + X-AneePay-Signature
+    A->>M: POST payload + X-AneePay-Signature
     alt 2xx
-        M-->>W: 200 OK
-        W->>DB: delivery = success
+        M-->>A: 200 OK
+        A->>A: delivery = success
     else non-2xx / timeout / network error
-        M-->>W: 5xx or no response
-        W->>DB: attempts += 1, next_retry_at = backoff
-        W->>M: retry (up to 8 attempts total)
+        M-->>A: 5xx or no response
+        A->>A: schedule retry (up to 8 attempts total)
+        A->>M: retry
     end
 ```
 
@@ -65,8 +62,8 @@ Key properties:
    [Payload and signature](payload-and-signature.md).
 2. **Respond 2xx fast.** Do the heavy work (order fulfillment, DB writes) asynchronously;
    the sender times out after 10 seconds and will retry anyway.
-3. **Be idempotent.** The same `event_id` may arrive more than once (retries, operator
-   replay). Deduplicate by `event_id` — see
+3. **Be idempotent.** The same `event_id` may arrive more than once (retries).
+   Deduplicate by `event_id` — see
    [Delivery and retries](delivery-retries-idempotency.md).
 4. **Gate real-world actions on `is_sandbox`.** Sandbox webhooks are indistinguishable
    in shape from production ones except for `is_sandbox: true` and `network: "amoy"`.
@@ -88,14 +85,14 @@ Key properties:
 ## Sandbox
 
 Sandbox payments (`?sandbox=yes` at payment creation) produce real webhooks from the
-Amoy testnet listener — with `network: "amoy"` and `is_sandbox: true`. This is the
+Amoy testnet — with `network: "amoy"` and `is_sandbox: true`. This is the
 recommended way to test your endpoint end-to-end. See
-[Testing and replay](testing-and-replay.md) and [Sandbox](../sandbox.md).
+[Testing webhooks](testing-and-replay.md) and [Sandbox](../sandbox.md).
 
 ## In this section
 
 - [Payload and signature](payload-and-signature.md) — the v1 contract and verification.
-- [Delivery, retries, idempotency](delivery-retries-idempotency.md) — outbox, backoff,
+- [Delivery, retries, idempotency](delivery-retries-idempotency.md) — retries, backoff,
   what at-least-once means for you.
-- [Testing and replay](testing-and-replay.md) — local setup, sandbox drills, common
-  failures.
+- [Testing webhooks](testing-and-replay.md) — public test endpoint, sandbox drills,
+  common failures.

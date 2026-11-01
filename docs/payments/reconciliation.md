@@ -22,7 +22,7 @@ newest first.
 | --- | --- | --- | --- |
 | `page` | integer | `1` | Page number. |
 | `limit` | integer | `20` | Items per page. |
-| `type` | string | — | `A` (Standard), `B` (Splits), `C` (Confirmed). |
+| `type` | string | — | `A` (Standard) or `B` (Splits). |
 | `status` | string | — | `pending`, `success`, `failed`. |
 | `created_from` | ISO-8601 | — | Creation time, from (naive timestamps are treated as UTC). |
 | `created_to` | ISO-8601 | — | Creation time, to. |
@@ -73,6 +73,10 @@ curl "https://api.aneepay.com/accounts/<account-id>/payments?type=B&created_from
 
 `total` is the full count under the current filters; iterate while
 `has_next` is `true`.
+
+The list is a summary projection: `amount`, `token`, `network`, and
+`description` are top-level fields here, unlike the nested `payment_details`
+object returned by [`GET /payments/{id}`](status-and-polling.md).
 
 ## CSV export (dashboard)
 

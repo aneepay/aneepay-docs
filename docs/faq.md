@@ -58,7 +58,7 @@ your obligations.
 - Standard payments (Polygon): `0x7AB120ac5060997B5c9AB2F3e891273dd686b8A2`
 - Split payments (Polygon): `0x104e5C8A3C04f1cE4919BBF0b33bd81FF8c49841`
 
-Both are verified; addresses for Amoy and local development are in
+Both are verified; the Amoy (sandbox) addresses are in
 [Networks, tokens, and fees](payments/networks-tokens-fees.md).
 
 ## Merchants
@@ -136,8 +136,10 @@ centralized processors do.
 
 ### Which wallets can pay?
 
-MetaMask on iOS and Android (the checkout offers a QR code and a MetaMask deeplink).
-Other wallets are not currently supported.
+Any EIP-1193 wallet works in a desktop browser or an in-app browser; the checkout
+also discovers wallets through EIP-6963. On mobile, MetaMask is the tested path —
+scan the QR code or use the MetaMask deep link. Other mobile wallets are not
+currently tested.
 
 ### The QR code does not work — what now?
 

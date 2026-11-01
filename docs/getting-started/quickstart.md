@@ -45,7 +45,7 @@ Call the API from your backend. Never from the browser — that would expose
 curl -X POST "https://api.aneepay.com/payments/" \
   -H "X-Account-Id: <your-account-uuid>" \
   -H "Content-Type: application/json" \
-  -d '{"amount": 19.50, "token": "usdt", "network": "polygon", "description": "Order #12345"}'
+  -d '{"amount": "19.50", "token": "usdt", "network": "polygon", "description": "Order #12345"}'
 ```
 
 Response:
@@ -124,7 +124,7 @@ Response:
             'method' => 'POST',
             'header' => "Content-Type: application/json\r\nX-Account-Id: $accountId\r\n",
             'content' => json_encode([
-                'amount' => 19.50,
+                'amount' => '19.50',
                 'token' => 'usdt',
                 'network' => 'polygon',
                 'description' => 'Order #12345',
@@ -209,7 +209,7 @@ webhook carries `is_sandbox: true` — do not ship real goods when you see it.
 curl -X POST "https://api.aneepay.com/payments/?sandbox=yes" \
   -H "X-Account-Id: <your-account-uuid>" \
   -H "Content-Type: application/json" \
-  -d '{"amount": 5.00, "token": "usdt", "network": "amoy", "description": "Sandbox test"}'
+  -d '{"amount": "5.00", "token": "usdt", "network": "amoy", "description": "Sandbox test"}'
 ```
 
 In sandbox mode the API forces `network=amoy` and `token=usdc` regardless of

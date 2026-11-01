@@ -5,8 +5,7 @@ pays the total amount once, the 0.5% fee is deducted on-chain, and the
 remaining net amount is transferred to each recipient by their share.
 
 Create them with `POST /payments/split/` — a separate endpoint from Standard
-payments (ADR 0010) because the request carries recipient data with its own
-invariants.
+payments because the request carries recipient data with its own invariants.
 
 ## Request
 
@@ -39,7 +38,7 @@ curl -X POST "https://api.aneepay.com/payments/split/" \
   -H "X-Account-Id: <your-account-uuid>" \
   -H "Content-Type: application/json" \
   -d '{
-    "amount": 19.50,
+    "amount": "19.50",
     "token": "usdt",
     "network": "polygon",
     "description": "Order #123456",
@@ -98,7 +97,7 @@ After confirmation, `fee` and `net_amount` are added as for Standard payments.
 
 !!! warning "Recipient structure is public"
     `recipients` are stored in `payment_details` and returned by the public
-    [`GET /payments/{id}``](status-and-polling.md). The split layout is
+    [`GET /payments/{id}`](status-and-polling.md). The split layout is
     public data — never put personal information in addresses or related
     fields (see [Security and privacy](security-and-privacy.md)).
 
@@ -116,19 +115,22 @@ After confirmation, `fee` and `net_amount` are added as for Standard payments.
 
 | Status | `code` | When |
 | --- | --- | --- |
-| `403` | `account_not_found` | Unknown account, `is_safe: false`, or `Origin` mismatch. |
-| `422` | `validation_error` | Share sum ≠ 10000, bad/zero/duplicate addresses, out-of-range `share`, wallet not among recipients, or any other schema violation. |
+| `403` | `account_not_found` | `X-Account-Id` is missing or unknown. |
+| `403` | `account_not_safe` | The account's domain is flagged `is_safe: false` (production). |
+| `403` | `domain_mismatch` | The request carries an `Origin` header that does not match the account's domain. |
+| `422` | `validation_error` | Share sum ≠ 10000, bad/zero/duplicate addresses, out-of-range `share`, or any other schema violation. |
+| `422` | `split_owner_not_recipient` | The account wallet is missing from `recipients`. |
+| `422` | `split_sandbox_unsupported` | Sandbox split contract is not available for the account. |
 | `500` | `internal_error` | Server-side error during initialization. |
-| `503` | `split_payment_unavailable` | The split contract is not configured for this network. |
+| `503` | `split_payment_unavailable` | Split payments are not available on this network. |
 
-## Why a separate endpoint (ADR 0010)
+## Why a separate endpoint
 
-`POST /payments/` uses `extra="forbid"` and a fixed contract; recipients would
-have made that public schema conditional and risky for existing clients. A
-separate schema keeps Standard stable, keeps split validation explicit
-(`sum(share) == 10000`), and reuses the same confirmation pipeline: the Django
-listener, webhooks, metrics, and the `operation_id` bijection are shared with
-Standard payments.
+Splits use their own request schema because recipients add invariants (share sum,
+owner inclusion) that would make the Standard payment contract conditional and
+risky for existing clients. The separate schema keeps Standard stable and split
+validation explicit (`sum(share) == 10000`), while both payment types share the
+same status and webhook model.
 
 ## Replay protection
 

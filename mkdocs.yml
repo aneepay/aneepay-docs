@@ -74,7 +74,7 @@ nav:
           - Webhooks overview: webhooks/overview.md
           - Payload and signature: webhooks/payload-and-signature.md
           - Delivery, retries, idempotency: webhooks/delivery-retries-idempotency.md
-          - Testing and replay: webhooks/testing-and-replay.md
+          - Testing webhooks: webhooks/testing-and-replay.md
   - Errors, sandbox, and support:
       - Errors: errors/index.md
       - Sandbox: sandbox.md

@@ -1,8 +1,8 @@
 # Delivery, retries, idempotency
 
-Webhooks are delivered from a **durable outbox**: the delivery record is written in the
-same transaction that marks the payment `success`, then sent by a separate worker. This
-section describes the exact delivery contract so you can build a resilient receiver.
+A delivery is created when the payment becomes `success` and is retried until your
+endpoint acknowledges it. This section describes the exact delivery contract so you
+can build a resilient receiver.
 
 ## Delivery contract
 
@@ -13,26 +13,26 @@ section describes the exact delivery contract so you can build a resilient recei
 | Success        | Any **2xx** status (body ignored)                                            |
 | Failure        | Non-2xx, timeout, DNS/connection error, or unsafe URL                        |
 | Ordering       | One delivery per payment; retries of the same payment are strictly sequential |
-| Concurrency    | One attempt in flight per delivery (row lock in the outbox)                  |
-| Payload        | **Frozen** at outbox creation — identical bytes on every retry and replay    |
-| `event_id`     | Payment UUID; stable across retries and replay                               |
+| Concurrency    | One attempt in flight per delivery                                           |
+| Payload        | **Frozen** when the delivery is created — identical bytes on every retry     |
+| `event_id`     | Payment UUID; stable across retries                                          |
 
 !!! warning "Respond fast, process later"
 
     The sender gives you 10 seconds and treats any 2xx as acceptance. Verify the
     signature, persist the event, return 2xx, then process asynchronously. If your
-    handler is down for a while, the outbox keeps the event alive.
+    handler is down for a while, AneePay keeps the event alive and retries it.
 
 ## Retry schedule
 
-After a failed attempt the outbox schedules the next one with exponential backoff:
+After a failed attempt AneePay schedules the next one with exponential backoff:
 
 ```
 delay = min(2 s × 2^(attempts − 1), 300 s)
 ```
 
-With the default configuration (`WEBHOOK_MAX_ATTEMPTS=8`, base 2 s, cap 300 s) a
-persistently failing endpoint sees:
+With the default policy (up to 8 attempts, base 2 s, cap 300 s) a persistently
+failing endpoint sees:
 
 | Attempt | Delay before it | Cumulative (approx.) |
 | ------- | --------------- | -------------------- |
@@ -46,16 +46,15 @@ persistently failing endpoint sees:
 | 8       | 128 s           | 4 m 14 s             |
 
 After the 8th failed attempt the delivery becomes terminally **failed** and will not
-be retried automatically. Recover it with an operator replay (see
-[Testing and replay](testing-and-replay.md)) or fall back to reconciliation via
-[the payments list](../payments/reconciliation.md).
+be retried automatically. There is no merchant API to request a redelivery — recover
+missed events via [the payments list](../payments/reconciliation.md) and backfill
+your orders.
 
 !!! note
 
-    The backoff base and cap (`WEBHOOK_RETRY_BASE_SECONDS`, `WEBHOOK_RETRY_MAX_SECONDS`)
-    are server-side configuration; the schedule above reflects current defaults. Treat
-    the exact timing as an implementation detail — design your receiver to tolerate
-    gaps of minutes, not milliseconds.
+    The schedule above reflects the current defaults. Treat the exact timing as
+    informational — design your receiver to tolerate gaps of minutes, not
+    milliseconds.
 
 ## At-least-once semantics
 
@@ -63,7 +62,7 @@ The guarantee is **at-least-once**, not exactly-once. Duplicates can occur when:
 
 - your endpoint processed the request but the 2xx response was lost (timeout — the
   sender saw a failure and retried);
-- an operator replayed a delivery after a false negative;
+- a delivery was retried after a false negative;
 - your process crashed after HTTP 2xx was sent by a proxy but before your handler
   finished.
 
@@ -99,19 +98,17 @@ def handle_webhook(raw_body: bytes, signature: str, secret: str) -> None:
 
 ## Unsafe / unreachable URLs
 
-Before each attempt the platform validates `status_url` (SSRF guard):
+Before each attempt AneePay validates `status_url`:
 
 - scheme must be `http` or `https`;
-- host must be a **public** address — `localhost`, `*.localhost`, private, loopback,
-  link-local and reserved ranges are rejected.
+- host must be a **public** address — private, loopback, link-local and reserved
+  ranges are rejected.
 
 A rejected URL fails the attempt immediately (no HTTP request is made) and counts
-toward the 8 attempts. In local development (`DEBUG`) the validation is skipped, so
-`http://127.0.0.1:…` works — see [Testing and replay](testing-and-replay.md).
+toward the 8 attempts.
 
-For production use a public HTTPS endpoint. If you need to receive events on a laptop,
-put a tunnel (ngrok, Cloudflare Tunnel, …) in front and configure its public URL as
-`status_url`.
+For production use a public HTTPS endpoint. To receive events on a laptop, run a
+tunnel (ngrok, Cloudflare Tunnel, …) and configure its public URL as `status_url`.
 
 ## Missing or disabled `status_url`
 
@@ -138,5 +135,5 @@ by the contract. For recipient breakdown, read
 
 ## Next
 
-- [Testing and replay](testing-and-replay.md) — drills, local receiver, operator replay.
-- [Reconciliation](../payments/reconciliation.md) — the safety net behind the outbox.
+- [Testing webhooks](testing-and-replay.md) — sandbox drills and common failures.
+- [Reconciliation](../payments/reconciliation.md) — the safety net behind webhooks.

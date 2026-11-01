@@ -17,10 +17,10 @@ custody, and no counterparty risk on our side.
 | Actor | Role |
 | --- | --- |
 | Your backend | Creates payments (`POST /payments/`), receives webhooks, reconciles. |
-| Customer | Pays from their own wallet (MetaMask or any EIP-1993/EIP-6963 wallet) on the hosted page. |
+| Customer | Pays from their own wallet (any EIP-1193/EIP-6963 wallet, including MetaMask) on the hosted page. |
 | Hosted checkout (dApp) | AneePay-hosted page at `checkout_url`: QR code, MetaMask deep link, network switching, calls the contract. |
 | Smart contract (`PolygonStandardPayment`) | Deducts the 0.5% fee on-chain and transfers the net amount to your wallet atomically. Emits `PaymentProcessed`. |
-| Listener (AneePay backend) | Watches chain events, waits for finality, updates the payment status, and delivers the signed webhook to your `status_url`. |
+| AneePay | Confirms the on-chain payment, updates its status, and delivers the signed webhook to your `status_url`. |
 
 ## Payment flow
 
@@ -31,7 +31,7 @@ custody, and no counterparty risk on our side.
    `processPayment(operationId, token, amount, recipient)` on the contract.
 5. The contract deducts the 0.5% fee and transfers the net amount to your
    wallet, then emits `PaymentProcessed`.
-6. The listener receives the event, waits for confirmation, sets the payment
+6. AneePay receives the event, waits for confirmation, sets the payment
    status to `success`, and sends a signed webhook to your `status_url`.
 7. The dApp redirects the customer's browser to your `success_url` or
    `fail_url`. You track the authoritative status via webhook or API polling.
@@ -41,15 +41,15 @@ sequenceDiagram
     participant M as Your backend
     participant F as AneePay API
     participant C as Smart contract
-    participant L as Listener
+    participant A as AneePay
     participant W as Customer wallet
     M->>F: POST /payments/ (X-Account-Id)
     F-->>M: {id, operation_id, status=pending, checkout_url}
     M->>W: redirect to checkout_url
     W->>C: processPayment(...)
     C-->>C: fee 0.5% → platform, net → merchant wallet
-    C-->>L: PaymentProcessed event
-    L-->>M: webhook POST status_url (HMAC-SHA256)
+    C-->>A: PaymentProcessed event
+    A-->>M: webhook POST status_url (HMAC-SHA256)
     W-->>M: redirect to success_url / fail_url
 ```
 
@@ -63,8 +63,8 @@ The contract is the only component that moves money:
   net amount → your wallet. If either transfer fails, the whole transaction
   reverts — there are no partial settlements.
 - The contract emits `PaymentProcessed` with `operationId`, sender, recipient,
-  token, amount, `feeAmount`, and `netAmount`. That event is what the listener
-  uses to confirm the payment.
+   token, amount, `feeAmount`, and `netAmount`. AneePay uses that event to
+   confirm the payment.
 
 Contracts are built with OpenZeppelin (`ReentrancyGuard`, `Pausable`,
 `SafeERC20`), and verified source is published on Polygonscan. Gas is paid by

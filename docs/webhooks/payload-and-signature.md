@@ -5,10 +5,10 @@ signature header you must verify before processing anything.
 
 ## Payload v1
 
-The canonical contract lives in the platform repository at
-`docs/schemas/webhook-v1.schema.json` (`$id: https://aneepay.com/schemas/webhook-v1.json`).
-All fields are **required**; the schema forbids extra properties (`additionalProperties:
-false`), so a field set can only change via a new `version`.
+The canonical contract is the public JSON Schema at
+<https://aneepay.com/schemas/webhook-v1.json>. All fields are **required**; the
+schema forbids extra properties (`additionalProperties: false`), so a field set
+can only change via a new `version`.
 
 ```json
 {
@@ -29,7 +29,7 @@ false`), so a field set can only change via a new `version`.
 | Field          | Type            | Meaning                                                                 |
 | -------------- | --------------- | ----------------------------------------------------------------------- |
 | `version`      | `1`             | Contract version. Bump only in a new payload contract.                 |
-| `event_id`     | string (UUID)   | Payment UUID. **Stable across retries and operator replay** — your idempotency key. |
+| `event_id`     | string (UUID)   | Payment UUID. **Stable across retries** — your idempotency key.        |
 | `operation_id` | integer         | On-chain operation id (`int(uuid)`), matches the one from `POST /payments/`. |
 | `status`       | `"success"`     | Const in v1: webhooks are sent only for successful payments.           |
 | `timestamp`    | number          | Unix seconds (float) when the payload was built.                        |
@@ -135,10 +135,10 @@ async def aneepay_webhook(request: Request):
 
 On a mismatch: return **401** and do not process the payload. Retries will keep the
 same body and signature, so a transient bug on your side does not corrupt anything —
-fix and let the outbox redeliver, or wait for operator replay
-(see [Testing and replay](testing-and-replay.md)).
+fix the verifier and let the retries redeliver
+(see [Testing webhooks](testing-and-replay.md)).
 
 ## Next
 
 - [Delivery, retries, idempotency](delivery-retries-idempotency.md)
-- [Testing and replay](testing-and-replay.md)
+- [Testing webhooks](testing-and-replay.md)

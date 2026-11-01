@@ -3,8 +3,8 @@
 `GET /payments/{id}` returns the current state of one payment. It is
 **public by design** — no `X-Account-Id` header — because a payment's `id`
 is not a secret: it is bijectively derivable from the on-chain
-`operation_id` (ADR 0009). Use it as a status source and as a fallback when
-webhooks are unavailable.
+`operation_id`. Use it as a status source and as a fallback when webhooks are
+unavailable.
 
 ## Request
 
@@ -39,9 +39,9 @@ No authentication headers. The path parameter is the payment UUID returned by
 | Field | Description |
 | --- | --- |
 | `id` | Payment UUID. |
-| `payment_type` | `A` (Standard), `B` (Splits), `C` (Confirmed). |
-| `payment_type_display` | Human-readable label ("Standard Payment", "Splits Payment", "Confirmed Payment"). |
-| `status` | `pending` \| `success` \| `failed`. (`cancelled` exists only as an internal admin status — never part of the public contract.) |
+| `payment_type` | `A` (Standard) or `B` (Splits). Base fulfillment decisions on `status`, not on `payment_type`. |
+| `payment_type_display` | Human-readable label ("Standard Payment", "Splits Payment"). |
+| `status` | `pending` \| `success` \| `failed`. |
 | `status_display` | Human-readable label. |
 | `is_confirmed` | `true` once the payment is finalized on-chain. |
 | `created_at` | ISO-8601 creation time (UTC). |

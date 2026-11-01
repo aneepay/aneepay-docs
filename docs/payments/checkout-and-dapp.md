@@ -50,9 +50,10 @@ Step by step:
 
     The native currency for gas is **POL**.
 
-3. **Fresh status check.** Before anything is signed, the page fetches the
-   current status from your `status_url`. If the payment is already `success`,
-   the button locks ("already paid"); if `failed`, the flow stops.
+3. **Fresh status check.** Before anything is signed, the page reads the current
+   status from the public `GET /payments/{id}` endpoint. If the payment is
+   already `success`, the button locks ("already paid"); if `failed`, the flow
+   stops.
 4. **Gateway health.** The dApp calls `paused()` on the contract — while the
    gateway is paused, payments are rejected (the contract is `Pausable`).
 5. **Balance and fee.** The token's `decimals()`/`symbol()` are read from the

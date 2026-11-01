@@ -27,8 +27,8 @@ Calls are **server-to-server only** — the endpoint identifies you by the
 | `network` | string | **Yes** | `polygon` (mainnet) \| `amoy` (testnet); case-insensitive. | `polygon` |
 | `description` | string | No | Max **500** characters. **Public** — shown to the customer and readable via the public status endpoint; use an order number, never personal data. | `Order #12345` |
 
-Unknown fields are rejected: the schema sets `extra="forbid"`, so an extra key
-in the body is a **422**, not a silently ignored property.
+Unknown fields return **422** — a typo such as `"amt"` is rejected, not silently
+ignored.
 
 ## Response
 
@@ -46,7 +46,7 @@ in the body is a **422**, not a silently ignored property.
 | `id` | Payment UUID (your order reference on the AneePay side). |
 | `operation_id` | The same payment encoded as `uint128` (`int(id)`), for the smart contract. Lossless and bijective: `uuid.UUID(int=operation_id)` restores `id`. This is what appears on-chain and in webhooks — store it on your order. |
 | `status` | Always `pending` at creation. |
-| `checkout_url` | Hosted checkout page — redirect the customer here. Production: `https://aneepay.com/payment/{uuid}/`; local dev: `http://localhost:8000/payment/{uuid}/`. |
+| `checkout_url` | Hosted checkout page — redirect the customer here. Format: `https://aneepay.com/payment/{uuid}/`. |
 
 The response is JSON, not HTML: your backend receives it and redirects the
 customer itself.
@@ -59,7 +59,7 @@ customer itself.
     curl -X POST "https://api.aneepay.com/payments/" \
       -H "X-Account-Id: <your-account-uuid>" \
       -H "Content-Type: application/json" \
-      -d '{"amount": 19.50, "token": "usdt", "network": "polygon", "description": "Order #12345"}'
+      -d '{"amount": "19.50", "token": "usdt", "network": "polygon", "description": "Order #12345"}'
     ```
 
 === "Python"
@@ -71,7 +71,7 @@ customer itself.
         "https://api.aneepay.com/payments/",
         headers={"X-Account-Id": ACCOUNT_ID},
         json={
-            "amount": 19.50,
+            "amount": "19.50",
             "token": "usdt",
             "network": "polygon",
             "description": "Order #12345",
@@ -92,7 +92,7 @@ customer itself.
         "X-Account-Id": ACCOUNT_ID,
       },
       body: JSON.stringify({
-        amount: 19.5,
+        amount: "19.50",
         token: "usdt",
         network: "polygon",
         description: "Order #12345",
@@ -111,7 +111,7 @@ customer itself.
             'method' => 'POST',
             'header' => "Content-Type: application/json\r\nX-Account-Id: $accountId\r\n",
             'content' => json_encode([
-                'amount' => 19.50,
+                'amount' => '19.50',
                 'token' => 'usdt',
                 'network' => 'polygon',
                 'description' => 'Order #12345',
@@ -128,13 +128,15 @@ see [Errors](../errors/index.md).
 
 | Status | `code` | When |
 | --- | --- | --- |
-| `403` | `account_not_found` | Unknown `X-Account-Id`, `is_safe: false` (production), or `Origin` mismatch with the account domain. |
-| `422` | `validation_error` | Body fails validation (bad `amount`/`token`/`network`, extra fields, `description` > 500) or the `X-Account-Id` header is missing/invalid. |
+| `403` | `account_not_found` | `X-Account-Id` is missing or unknown. |
+| `403` | `account_not_safe` | The account's domain is flagged `is_safe: false` (production). |
+| `403` | `domain_mismatch` | The request carries an `Origin` header that does not match the account's domain. |
+| `422` | `validation_error` | Body fails validation (bad `amount`/`token`/`network`, extra fields, `description` > 500) or the `X-Account-Id` header is invalid. |
 | `500` | `internal_error` | Server-side failure during payment initialization. |
 
 !!! note "403 instead of 404"
     A nonexistent account also returns **403**, not 404, so the status does not
-    reveal whether an account UUID exists (ADR 0003).
+    reveal whether an account UUID exists.
 
 ## After creation
 

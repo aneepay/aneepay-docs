@@ -9,7 +9,7 @@
 | API value | `network: "polygon"` | `network: "amoy"` (forced by `?sandbox=yes`) |
 | Explorer | [polygonscan.com](https://polygonscan.com) | [amoy.polygonscan.com](https://amoy.polygonscan.com) |
 | Gas token | POL | POL (test) |
-| Confirmation depth | 12 blocks (default, `PAYMENT_CONFIRMATIONS`) | 12 blocks (default) |
+| Confirmation depth | 12 blocks (default) | 12 blocks (default) |
 
 Sandbox is a **production capability**: `?sandbox=yes` works against the live
 API and produces real testnet payments with webhooks — see
@@ -76,9 +76,9 @@ Example: a 19.50 USDT payment yields `fee = 0.0975 USDT`, net
 
 ## Amount precision
 
-The API accepts and returns decimal strings; the database stores
-`Numeric(16,6)`; amounts are serialized as strings to preserve precision —
-see [Amounts, rounding, and limits](amounts-rounding-and-limits.md).
+The API accepts decimal strings and numbers, stores up to 6 decimal places, and
+returns amounts as strings to preserve precision — see
+[Amounts, rounding, and limits](amounts-rounding-and-limits.md).
 
 ## Related
 

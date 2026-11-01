@@ -35,9 +35,6 @@ the payer to your wallet. The platform never holds or controls your assets.
     Earn 10% of the platform fee from referred merchants: see
     [Partner program](partner/index.md).
 
-=== "Self-hosting / contributor"
-    Run or study the stack: [Developers](developers/index.md).
-
 ## Sections
 
 - [Getting started](getting-started/overview.md) — product model, quickstart,
@@ -47,7 +44,6 @@ the payer to your wallet. The platform never holds or controls your assets.
 - [x402](x402/index.md) — protocol, SDK, facilitator API.
 - [Partner](partner/index.md) — referral program and payouts.
 - [API](api/index.md) — endpoints, authentication, errors.
-- [Developers](developers/index.md) — architecture, contracts, testing, operations.
 - [Reference](reference/index.md) — statuses, networks, tokens, error codes.
 
 ## Useful links

@@ -24,7 +24,7 @@ live elsewhere; this is the list to review before and after every release.
       422s are your bug).
 - [ ] Handle `403 account_not_found` as "bad credentials", not as "account
       missing" — and never rely on 404/403 responses to probe which account ids
-      exist (the API deliberately does not give you that oracle, ADR 0003).
+      exist (the API deliberately does not give you that oracle).
 - [ ] Retry policy: unknown outcome → list payments first, then decide —
       each `POST /payments/` creates a new payment
       ([Idempotency and retries](../payments/idempotency-and-retries.md)).
@@ -51,8 +51,8 @@ live elsewhere; this is the list to review before and after every release.
 
 ## URLs and redirects
 
-- [ ] `status_url` is public HTTPS in production (private/localhost targets are
-      rejected by the SSRF guard outside `DEBUG`).
+- [ ] `status_url` is public HTTPS in production; private and loopback targets
+      are rejected.
 - [ ] `success_url` / `fail_url` are fixed paths on your site; never reflect
       user input into them (open-redirect risk).
 - [ ] The hosted checkout URL comes from the API response — do not construct it.
@@ -63,10 +63,9 @@ live elsewhere; this is the list to review before and after every release.
       `operation_id` on your orders.
 - [ ] Run periodic reconciliation ([Reconciliation](../payments/reconciliation.md))
       as a safety net behind webhooks; alert on gaps.
-- [ ] Store amounts as decimals (never floats) — matches the platform's
-      `Numeric(16,6)`/string contract.
-- [ ] Handle edge `429` with backoff (rate limiting lives at the CDN, not in
-      the application).
+- [ ] Store amounts as decimals (never floats) — the API accepts and returns
+      decimal strings.
+- [ ] Handle edge `429` with backoff (rate limiting sits in front of the API).
 - [ ] Keep sandbox traffic out of production fulfillment pipelines end-to-end,
       including exports and analytics.
 

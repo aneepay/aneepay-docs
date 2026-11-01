@@ -7,13 +7,13 @@ errors) or the payment `operation_id` to [support](#support).
 
 | Symptom | Likely cause | Fix |
 | ------- | ------------ | --- |
-| `403 account_not_found` | Missing or wrong `X-Account-Id` | Send the account UUID on every `POST /payments/` ([Errors](errors/index.md)). Remember: it is 403, not 404 — by design (ADR 0003). |
+| `403 account_not_found` | Missing or wrong `X-Account-Id` | Send the account UUID on every `POST /payments/` ([Errors](errors/index.md)). Remember: it is deliberately 403, not 404. |
 | `403 account_not_safe` | Account domain flagged `is_safe: false` | Complete the reputation review or test with `?sandbox=yes` (bypasses the check). |
 | `403 domain_mismatch` | Browser `Origin` host ≠ account `domain` | Call from your server (no Origin) or fix the registered domain. |
-| `422 validation_error` | Bad `amount`/`token`/`network`, `description` > 500 chars, or unknown field | Read `errors[]`; `extra=forbid` rejects typos like `"amt"`. |
+| `422 validation_error` | Bad `amount`/`token`/`network`, `description` > 500 chars, or unknown field | Read `errors[]`; unknown fields such as `"amt"` are rejected. |
 | `422 split_owner_not_recipient` | Account wallet missing from split `recipients` | Add the account wallet with a non-zero share. |
-| `422 split_sandbox_unsupported` | Sandbox split contract not configured server-side | Deployment issue — contact support. |
-| `503 split_payment_unavailable` | Split contract not configured | Use regular payments, or contact support. |
+| `422 split_sandbox_unsupported` | Split payments are not available in sandbox for your account | Contact support. |
+| `503 split_payment_unavailable` | Split payments are not available on this network | Use regular payments, or contact support. |
 | `500 payment_creation_failed` / `internal_error` | Transient server issue | Retry with backoff; if persistent, contact support with `request_id`. |
 
 ## Checkout / customer side
@@ -33,9 +33,9 @@ errors) or the payment `operation_id` to [support](#support).
 | ------- | ------------ | ----- |
 | No webhook at all | `status_url` empty on the account; payment not `success`; no `status_url` at confirmation time | Set `status_url`; confirm `GET /payments/{id}` shows `success`; payments confirmed before the URL was set are never delivered — reconcile via [the payments list](payments/reconciliation.md). |
 | Webhook receiver returns `401` | Signature computed over re-serialized JSON, wrong secret, or body mutated by middleware | Verify HMAC-SHA256 over the **raw bytes** with constant-time compare ([Payload and signature](webhooks/payload-and-signature.md)). |
-| Webhooks stop after ~4 minutes | Endpoint failing all 8 attempts (backoff window ≈ 4 min 14 s) | Fix the endpoint; missed events are recovered by reconciliation; operator can replay the delivery ([Delivery and retries](webhooks/delivery-retries-idempotency.md)). |
+| Webhooks stop after ~4 minutes | Endpoint failing all 8 attempts (backoff window ≈ 4 min 14 s) | Fix the endpoint; missed events are recovered by reconciliation ([Delivery and retries](webhooks/delivery-retries-idempotency.md)). |
 | Duplicate webhooks | At-least-once delivery by design | Dedupe by `event_id` (UNIQUE constraint), respond 2xx. |
-| Webhook rejected before reaching you | `status_url` is localhost/private/reserved IP outside `DEBUG` (SSRF guard) | Use a public HTTPS endpoint (tunnel for local testing). |
+| Webhook rejected before reaching you | `status_url` points to a private, loopback, or reserved address | Use a public HTTPS endpoint (tunnel for local testing). |
 | Fulfillment triggered by sandbox payment | Missing `is_sandbox` gate | Block real-world actions when `is_sandbox: true` ([Sandbox](sandbox.md)). |
 
 ## Status and reconciliation
@@ -55,7 +55,7 @@ errors) or the payment `operation_id` to [support](#support).
 | Account marked "unsafe" | Domain reputation review (`is_safe: false`) | Wait for review or contact support; use `?sandbox=yes` meanwhile. |
 | Lost `webhook_secret` | Shown only once at creation | There is no rotation endpoint: create a new account and migrate — or ask support ([Account setup](getting-started/account-setup.md)). |
 | Cannot log in | Magic link expired (10 min) | Request a new link; check spam. |
-| 429 from the edge | Cloudflare rate limiting | Retry with exponential backoff; reduce request rate. |
+| 429 from the edge | Rate limiting before the API | Retry with exponential backoff; reduce request rate. |
 
 ## Support
 

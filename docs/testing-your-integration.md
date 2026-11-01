@@ -75,8 +75,8 @@ Failure drills:
 
 - [ ] Same checklist with production payments, tiny real amounts
       (e.g. 1 USDT on Polygon).
-- [ ] `status_url` is a public HTTPS endpoint (localhost is rejected outside
-      `DEBUG`).
+- [ ] `status_url` is a public HTTPS endpoint; private and loopback addresses
+      are rejected.
 - [ ] Customer pays gas in POL from their own wallet; funds arrive on your
       `wallet` with the 0.5% fee already deducted.
 - [ ] Reconciliation job runs on a schedule and you have alerted on gaps.

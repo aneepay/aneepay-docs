@@ -1,7 +1,7 @@
 # Errors
 
-All API errors follow **RFC 7807** with `Content-Type: application/problem+json`
-(platform decision: ADR 0002). Every error response carries a machine-readable
+All API errors follow **RFC 7807** with `Content-Type: application/problem+json`.
+Every error response carries a machine-readable
 `code` you can switch on, plus a `request_id` for support requests.
 
 ## Error format
@@ -14,7 +14,7 @@ All API errors follow **RFC 7807** with `Content-Type: application/problem+json`
   "detail": "Account not found",
   "instance": "/payments/",
   "code": "account_not_found",
-  "request_id": "__VG_UUID_5e27b1f6c1aa__"
+  "request_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 }
 ```
 
@@ -40,7 +40,7 @@ All API errors follow **RFC 7807** with `Content-Type: application/problem+json`
 
 | `code`             | When                                                                                 |
 | ------------------ | ------------------------------------------------------------------------------------- |
-| `account_not_found`| `X-Account-Id` missing or unknown. Deliberately **403, not 404** — a 404 would let attackers probe which account UUIDs exist (ADR 0003). |
+| `account_not_found`| `X-Account-Id` missing or unknown. Deliberately **403, not 404** — a 404 would let attackers probe which account UUIDs exist. |
 | `account_not_safe` | Account flagged `is_safe: false` (domain reputation review). Sandbox bypasses this check. |
 | `domain_mismatch`  | `Origin` header host does not match the account's registered `domain` (secondary check). |
 | `account_error`    | Fallback for other account-domain failures.                                          |
@@ -57,31 +57,30 @@ All API errors follow **RFC 7807** with `Content-Type: application/problem+json`
 | -------------------------- | ------------------------------------------------------------------------ |
 | `validation_error`         | Body/query failed schema validation. `errors[]` lists `loc`/`msg`/`type` per field. |
 | `split_owner_not_recipient`| Split: the account wallet is missing from `recipients`.                  |
-| `split_sandbox_unsupported`| Split in sandbox while no Amoy split-contract address is configured.     |
+| `split_sandbox_unsupported`| Split payments are not available in sandbox for your account.            |
 
 ### 5xx — server side
 
 | `code`                    | HTTP | When                                                        |
 | ------------------------- | ---- | ----------------------------------------------------------- |
-| `payment_creation_failed` | 500  | Payment record could not be persisted.                      |
+| `payment_creation_failed` | 500  | The payment could not be created.                           |
 | `payment_error`           | 500  | Generic payment-domain failure.                             |
-| `database_error`          | 500  | Database unavailable.                                        |
+| `database_error`          | 500  | Temporary storage failure.                                  |
 | `domain_error`            | 500  | Unclassified domain failure.                                |
-| `internal_error`          | 500  | Unhandled exception — details never leave the server.       |
-| `split_payment_unavailable` | 503 | Split contract not configured on the server.              |
+| `internal_error`          | 500  | Internal server error — details never leave the server.     |
+| `split_payment_unavailable` | 503 | Split payments are not available on this network.         |
 
-### 405 and other Starlette errors
+### 405 and other framework-level errors
 
-Unknown paths (`404`), wrong methods (`405`) and other framework-level errors use
+Unknown paths (`404`), wrong methods (`405`), and other framework-level errors use
 `code: "http_error"` in the same problem+json envelope.
 
-!!! note "No application-level 400 or 429 on the API"
+!!! note "No 400 or 429 from the public API"
 
-    ADR 0002 removed non-existent 400/429 statuses from the OpenAPI contract.
-    The public HTTP API does not currently emit them. Rate limiting is enforced
-    at the CDN edge (Cloudflare), which may return its own 429 — retry with
+    The public HTTP API does not currently emit 400 or 429 responses. Rate
+    limiting may return a 429 before a request reaches the API — retry with
     backoff. The dashboard CSV export endpoint (session-authenticated, not the
-    public API) returns plain Django `429`/`413`/`400` responses — see
+    public API) returns `429`/`413`/`400` responses — see
     [Reconciliation](../payments/reconciliation.md).
 
 ## Validation errors in detail
@@ -94,7 +93,7 @@ Unknown paths (`404`), wrong methods (`405`) and other framework-level errors us
   "detail": "Request validation failed",
   "instance": "/payments/",
   "code": "validation_error",
-  "request_id": "__VG_UUID_5e27b1f6c1aa__",
+  "request_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
   "errors": [
     {
       "loc": ["body", "amount"],
@@ -107,8 +106,8 @@ Unknown paths (`404`), wrong methods (`405`) and other framework-level errors us
 
 - `loc` starts with the request part (`body`, `query`) followed by the field path.
 - `msg` is human-readable; `type` is the machine tag from the validator.
-- `POST /payments/` forbids unknown fields (`extra=forbid`) — a typo like
-  `"amt"` produces a 422, not a silent default.
+- `POST /payments/` rejects unknown fields — a typo like `"amt"` produces a
+  422, not a silent default.
 
 ## Client error-handling rules
 
