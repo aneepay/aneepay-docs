@@ -99,7 +99,11 @@ nav:
       - Testing: x402/testing.md
       - Security: x402/security.md
       - Troubleshooting: x402/troubleshooting.md
-  - Partner: partner/index.md
+  - Partner:
+      - Overview: partner/index.md
+      - Getting started: partner/getting-started.md
+      - Commissions and payouts: partner/commissions-and-payouts.md
+      - FAQ: partner/faq.md
   - API: api/index.md
   - Developers: developers/index.md
   - Reference: reference/index.md
