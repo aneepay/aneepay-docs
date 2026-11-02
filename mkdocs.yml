@@ -90,7 +90,15 @@ nav:
       - Custom integration: cms/custom-integration.md
       - Plugin development: cms/plugin-development.md
       - Troubleshooting: cms/troubleshooting.md
-  - x402: x402/index.md
+  - x402:
+      - Overview: x402/index.md
+      - Protocol and wire: x402/protocol-and-wire.md
+      - SDK quickstart: x402/quickstart-sdk.md
+      - Facilitator API: x402/facilitator-api.md
+      - Gateway contracts: x402/gateway-contracts.md
+      - Testing: x402/testing.md
+      - Security: x402/security.md
+      - Troubleshooting: x402/troubleshooting.md
   - Partner: partner/index.md
   - API: api/index.md
   - Developers: developers/index.md
