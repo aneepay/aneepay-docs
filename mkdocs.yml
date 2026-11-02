@@ -82,7 +82,14 @@ nav:
       - Security best practices: security/best-practices.md
       - Troubleshooting: troubleshooting.md
       - FAQ: faq.md
-  - CMS: cms/index.md
+  - CMS:
+      - Overview: cms/index.md
+      - WooCommerce: cms/woocommerce.md
+      - OpenCart 3.x: cms/opencart.md
+      - PrestaShop 1.7 / 8: cms/prestashop.md
+      - Custom integration: cms/custom-integration.md
+      - Plugin development: cms/plugin-development.md
+      - Troubleshooting: cms/troubleshooting.md
   - x402: x402/index.md
   - Partner: partner/index.md
   - API: api/index.md
