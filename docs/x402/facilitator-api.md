@@ -3,7 +3,7 @@
 The AneePay facilitator is the server-side component that validates and settles
 x402 payments. Your resource server calls it; clients never do. The endpoints
 live on the same base URL as the payment API — `https://api.aneepay.com` — and
-are described together in the [API reference](../api/index.md) (ReDoc:
+are described together in the [API reference](../api/overview.md) (ReDoc:
 `https://api.aneepay.com/redoc`).
 
 !!! note "You already hold the account"
@@ -152,7 +152,7 @@ Outcomes:
 | `403`    | —                   | Origin check failed                   |
 
 Problem responses follow RFC 7807 (`application/problem+json`) with `code` and
-`request_id`, as everywhere else in the [API](../api/index.md#error-format).
+`request_id`, as everywhere else in the [API](../api/errors.md#error-format).
 
 ## Protocol error codes
 
@@ -186,4 +186,4 @@ facilitator returns no code, and surfaces transport failures as
 - [SDK quickstart](quickstart-sdk.md) — calling these endpoints through the
   SDK.
 - [Gateway contracts](gateway-contracts.md) — what settlement does on-chain.
-- [API reference](../api/index.md) — shared base URL, auth, error format.
+- [API reference](../api/overview.md) — shared base URL, auth, error format.

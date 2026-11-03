@@ -110,7 +110,7 @@ limitations:
 
 - Account and payments: [FAQ](../faq.md), [support](../getting-started/account-setup.md).
 - Endpoint shapes: [Facilitator API](facilitator-api.md) and the
-  [API reference](../api/index.md).
+  [API reference](../api/overview.md).
 - Include: SDK version, `network`, the error code or `request_id`, and whether
   the failure was local, at `/verify`, or at `/settle`.
 

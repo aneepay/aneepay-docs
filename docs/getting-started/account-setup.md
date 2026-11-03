@@ -25,7 +25,7 @@ An expired or invalid link shows an error page — just request a new one.
 | `success_url` | Page on **your** site where the customer lands after a successful payment. |
 | `fail_url` | Page on **your** site for failed payments, with a retry option. |
 | `status_url` | Server endpoint on **your** site that receives the success webhook. |
-| `webhook_secret` | Secret used to verify `X-AneePay-Signature`. Auto-generated, shown only once. |
+| `webhook_secret` | Secret used to verify `X-AneePay-Signature`. Auto-generated; displayed on the account card, not rotatable. |
 | `is_safe` | Domain safety flag. Payments are rejected with **403** when `false`. |
 
 !!! warning "`success_url`, `fail_url`, and `status_url` are your pages"
@@ -48,7 +48,8 @@ An expired or invalid link shows an error page — just request a new one.
 
 `is_safe` indicates that the registered domain is not listed in known
 malicious-domain databases (Google Safe Browsing and related feeds). The
-backend rechecks domains periodically and updates the flag.
+domain is re-checked when you sign in — for every account not checked in the
+last 7 days — and the flag is updated after each check.
 
 - Payments from accounts with `is_safe: false` are rejected with **403**.
 - New accounts start as `is_safe: false` until the first check passes.
@@ -59,7 +60,10 @@ If you believe your domain was flagged by mistake, contact support.
 ## Webhook secret
 
 - Generated automatically at account creation (random 32-character string).
-- Shown **only once** — store it in your secret manager.
+- Displayed on the account card every time you open it in the
+  [dashboard](../dashboard/accounts.md#the-account-card) — there is **no
+  rotation control** anywhere, so treat both the card and the secret as
+  sensitive.
 - Never log it, never put it in frontend code or public repositories.
 - It signs every webhook: `X-AneePay-Signature` is an HMAC-SHA256 hex digest
   of the raw request body keyed with this secret.
@@ -82,8 +86,9 @@ If you believe your domain was flagged by mistake, contact support.
     Treat the account UUID like any other API key: never expose it client-side.
 
     The blast radius of a leaked `account_id` is limited: the API has no
-    mutation endpoints that move money, and `status_url`/`webhook_secret` can
-    only be changed from the authenticated dashboard.
+    mutation endpoints that move money, and `status_url` can only be changed
+    from the authenticated dashboard, while `webhook_secret` cannot be changed
+    at all.
 
 ## Security checklist
 

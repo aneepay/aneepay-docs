@@ -55,6 +55,6 @@ arrives. Funds go directly to your wallet — AneePay is strictly non-custodial.
 
 - [Getting started](../getting-started/overview.md) — the full onboarding path.
 - [CMS](../cms/index.md) — plugins for WooCommerce, OpenCart, PrestaShop.
-- [API](../api/index.md) — endpoint reference and authentication.
+- [API](../api/overview.md) — endpoint reference and authentication.
 - [Partner program](../partner/index.md) — earn 10% of the platform fee.
 - [Reference](../reference/index.md) — statuses, networks, and error codes.

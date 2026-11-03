@@ -23,6 +23,6 @@ This section is for AneePay developers and operators: architecture, local develo
 
 ## Related sections
 
-- [API](../api/index.md) — HTTP API contracts.
+- [API](../api/overview.md) — HTTP API contracts.
 - [x402](../x402/index.md) — protocol and gateway contracts.
 - [Reference](../reference/index.md) — contract addresses and networks.

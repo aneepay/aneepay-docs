@@ -86,7 +86,7 @@ account(s) only.
 
 - Endpoint: `GET /dashboard/payments/export/` (session-authenticated).
 - Streams the **entire filtered set** (no pagination) as UTF-8 CSV.
-- **Rate limit:** 60 requests per minute per user → `429`.
+- **Rate limit:** 60 requests per minute per client IP → `429`.
 - **Row limit:** more than **10 000** rows → `413 Too many payments to
   export; narrow the filters.` (no file is generated).
 - Invalid filters → `400`.

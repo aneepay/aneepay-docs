@@ -128,7 +128,7 @@ see [Errors](../errors/index.md).
 
 | Status | `code` | When |
 | --- | --- | --- |
-| `403` | `account_not_found` | `X-Account-Id` is missing or unknown. |
+| `403` | `account_not_found` | `X-Account-Id` is a valid UUID, but no such account exists. (A missing or malformed header is `422 validation_error` instead.) |
 | `403` | `account_not_safe` | The account's domain is flagged `is_safe: false` (production). |
 | `403` | `domain_mismatch` | The request carries an `Origin` header that does not match the account's domain. |
 | `422` | `validation_error` | Body fails validation (bad `amount`/`token`/`network`, extra fields, `description` > 500) or the `X-Account-Id` header is invalid. |

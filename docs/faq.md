@@ -108,8 +108,8 @@ the check for testing. If it persists, contact support.
 
 ### Where is my payment history?
 
-Dashboard shows all payments with amounts, statuses and links to the explorer.
-For programmatic access use
+Dashboard shows all payments with amounts, statuses, and an expandable details
+row (the account card links the wallet on Polygonscan). For programmatic access use
 [Reconciliation](payments/reconciliation.md) (`GET /accounts/{account_id}/payments`
 and CSV export).
 

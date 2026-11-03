@@ -81,6 +81,6 @@ available once your status is `active` and a wallet is on file.
 
 - [Merchant](../merchant/index.md) — what the merchants you refer are signing
   up for.
-- [API reference](../api/index.md) — the payments that generate your
+- [API reference](../api/overview.md) — the payments that generate your
   commissions.
 - [FAQ](../faq.md#partners) — short answers about the partner program.

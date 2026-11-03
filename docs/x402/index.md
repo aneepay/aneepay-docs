@@ -13,7 +13,7 @@ API, known limitations, and support status are documented in this section.
 
     This is not the hosted checkout used by shop plugins (see
     [CMS integrations](../cms/index.md)), and it is not the general payment API
-    (see [API reference](../api/index.md)). x402 targets machine-to-machine
+    (see [API reference](../api/overview.md)). x402 targets machine-to-machine
     HTTP traffic: agents, scripts, and service-to-service calls that never show
     a page to a human.
 
@@ -87,7 +87,7 @@ The full wire format, headers, and validation order are in
 | Use x402 when…                                         | Use something else when…                                                                  |
 | ----------------                                       | --------------------------                                                                |
 | The caller is a machine: AI agent, cron job, service   | A human is shopping in a browser → [CMS integrations](../cms/index.md) or hosted checkout |
-| You price per request or per payload in USDC           | You need a hosted page and a human payer → [Payment API](../api/index.md)                 |
+| You price per request or per payload in USDC           | You need a hosted page and a human payer → [Payment API](../api/overview.md)                 |
 | The caller can sign an EIP-3009 authorization          | The caller cannot hold a wallet                                                           |
 | You control the HTTP server (Python/Starlette/FastAPI) | You cannot run middleware → consider the hosted flows                                     |
 
@@ -118,7 +118,7 @@ are listed in [Troubleshooting](troubleshooting.md#known-limitations).
 
 ## Related sections
 
-- [API reference](../api/index.md) — base URL, authentication, error format;
+- [API reference](../api/overview.md) — base URL, authentication, error format;
   the x402 endpoints live on the same base URL.
 - [CMS integrations](../cms/index.md) — the same AneePay account for
   storefront plugins.

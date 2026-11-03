@@ -135,5 +135,5 @@ Full checklist: [Security best practices](../security/best-practices.md).
 ## Next steps
 
 - [Quickstart](../getting-started/quickstart.md) — first payment in 10 minutes.
-- [API reference](../api/index.md) — endpoint map and OpenAPI schema.
+- [API reference](../api/overview.md) — endpoint map and OpenAPI schema.
 - [Testing your integration](../testing-your-integration.md) — end-to-end checklist.

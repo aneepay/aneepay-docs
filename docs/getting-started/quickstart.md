@@ -25,7 +25,8 @@ on-chain, and the net amount lands directly in your wallet.
       success webhook.
 4. Copy and store two values:
     - **Account ID** (UUID) — your API key, sent as the `X-Account-Id` header;
-    - **Webhook secret** — used to verify `X-AneePay-Signature`; shown only once.
+    - **Webhook secret** — used to verify `X-AneePay-Signature`; it stays on
+      the account card and there is no rotation control.
 
 Full field reference and safety rules: [Account setup](account-setup.md).
 
@@ -197,7 +198,9 @@ channel.
 Funds go straight to your `wallet`, minus the 0.5% fee — no AneePay balance
 involved. `fee` and `net_amount` appear in the webhook and in
 `GET /payments/{id}` after confirmation. For bulk checks use
-`GET /accounts/{account_id}/payments` (requires `X-Account-Id`).
+`GET /accounts/{account_id}/payments` (addressed by the account UUID in the
+path — the `X-Account-Id` header is not validated on this endpoint, so treat
+the whole URL as secret).
 
 ## Sandbox: testing without real funds
 

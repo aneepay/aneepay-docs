@@ -10,7 +10,7 @@ the security model behind that status.
 
     This is the merchant-facing threat model for HTTP x402 on EVM networks.
     Contract-level details are in [Gateway contracts](gateway-contracts.md);
-    account-level controls are in the [API reference](../api/index.md).
+    account-level controls are in the [API reference](../api/overview.md).
 
 ## Non-custodial by construction
 

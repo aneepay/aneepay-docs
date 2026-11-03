@@ -5,7 +5,7 @@ Terms used across the AneePay documentation.
 | Term | Definition |
 | --- | --- |
 | **Account** | A merchant unit inside AneePay: domain, receiving wallet, callback URLs, webhook secret. Identified by a UUID (`account_id`). |
-| **`X-Account-Id`** | HTTP header carrying the account UUID — the API key for creating payments and listing account payments. Server-side only. |
+| **`X-Account-Id`** | HTTP header carrying the account UUID — the API key for creating payments and x402 settlement. Server-side only. Read endpoints address data by the UUID in the path instead. |
 | **`Origin` check** | Optional secondary request check: if the `Origin` header is present, it must match the account's domain, otherwise **403**. |
 | **`is_safe`** | Flag saying the registered domain is not listed in malicious-domain databases (Google Safe Browsing). Payments are rejected with **403** while `false`; sandbox bypasses it. |
 | **Magic link** | Passwordless login: a one-time link sent by email, valid 10 minutes. |

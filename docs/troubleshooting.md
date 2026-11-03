@@ -7,7 +7,7 @@ errors) or the payment `operation_id` to [support](#support).
 
 | Symptom | Likely cause | Fix |
 | ------- | ------------ | --- |
-| `403 account_not_found` | Missing or wrong `X-Account-Id` | Send the account UUID on every `POST /payments/` ([Errors](errors/index.md)). Remember: it is deliberately 403, not 404. |
+| `403 account_not_found` | The `X-Account-Id` value is a valid UUID, but no such account exists | Check the account UUID on the dashboard card ([Errors](errors/index.md)). A **missing or malformed** header is `422 validation_error` instead. Remember: unknown is deliberately 403, not 404. |
 | `403 account_not_safe` | Account domain flagged `is_safe: false` | Complete the reputation review or test with `?sandbox=yes` (bypasses the check). |
 | `403 domain_mismatch` | Browser `Origin` host ≠ account `domain` | Call from your server (no Origin) or fix the registered domain. |
 | `422 validation_error` | Bad `amount`/`token`/`network`, `description` > 500 chars, or unknown field | Read `errors[]`; unknown fields such as `"amt"` are rejected. |
@@ -44,7 +44,7 @@ errors) or the payment `operation_id` to [support](#support).
 | ------- | ------------ | ----- |
 | `404 payment_not_found` on a payment you created | Typo'd id, or looking at another environment's payment | Compare with `POST /payments/` response / payments list; sandbox and production payments are separate records. |
 | Payments list empty | Wrong `account_id` in the path, filters too narrow, naive datetime interpreted as UTC | Use your account UUID; widen `created_from`/`created_to`; remember naive datetimes are treated as UTC. |
-| CSV export `429` | Rate limit 60 requests/min | Slow down; the limit is per-session dashboard export. |
+| CSV export `429` | Rate limit 60 requests/min | Slow down; the limit is per IP address on the dashboard export. |
 | CSV export `413` | More than 10 000 rows in one export | Narrow the date range. |
 | `GET /payments/{id}` returns 403 | It should not — this endpoint is public | You are probably calling an account-scoped route; check the path. |
 

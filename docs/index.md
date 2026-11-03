@@ -25,7 +25,7 @@ the payer to your wallet. The platform never holds or controls your assets.
 
 === "Custom integration"
     You write your own backend: [Quickstart](getting-started/quickstart.md),
-    then the [API](api/index.md) and [webhooks](webhooks/overview.md).
+    then the [API](api/overview.md) and [webhooks](webhooks/overview.md).
 
 === "AI agent / machine payments"
     Pay-per-request over HTTP with the x402 protocol: see
@@ -43,7 +43,7 @@ the payer to your wallet. The platform never holds or controls your assets.
 - [CMS](cms/index.md) — plugins for WooCommerce, OpenCart, PrestaShop.
 - [x402](x402/index.md) — protocol, SDK, facilitator API.
 - [Partner](partner/index.md) — referral program and payouts.
-- [API](api/index.md) — endpoints, authentication, errors.
+- [API](api/overview.md) — endpoints, authentication, errors.
 - [Reference](reference/index.md) — statuses, networks, tokens, error codes.
 
 ## Useful links

@@ -104,7 +104,20 @@ nav:
       - Getting started: partner/getting-started.md
       - Commissions and payouts: partner/commissions-and-payouts.md
       - FAQ: partner/faq.md
-  - API: api/index.md
+  - Dashboard:
+      - Overview: dashboard/overview.md
+      - Accounts: dashboard/accounts.md
+      - Payments and export: dashboard/payments-and-export.md
+      - Metrics: dashboard/metrics.md
+  - API:
+      - Overview: api/overview.md
+      - Authentication: api/authentication.md
+      - Endpoints: api/endpoints.md
+      - Errors: api/errors.md
+      - Webhooks: api/webhooks.md
+      - OpenAPI and ReDoc: api/openapi-and-redoc.md
+      - Changelog: api/changelog.md
+      - Versioning and deprecation: api/versioning-and-deprecation.md
   - Developers: developers/index.md
   - Reference: reference/index.md
 

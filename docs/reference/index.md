@@ -33,5 +33,5 @@ Reference data for AneePay: networks, tokens, statuses, and error codes.
 
 ## Related sections
 
-- [API](../api/index.md) — endpoints and error format.
+- [API](../api/overview.md) — endpoints and error format.
 - [Merchant](../merchant/index.md) — payment acceptance scenarios.

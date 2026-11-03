@@ -40,7 +40,7 @@ Every error response carries a machine-readable
 
 | `code`             | When                                                                                 |
 | ------------------ | ------------------------------------------------------------------------------------- |
-| `account_not_found`| `X-Account-Id` missing or unknown. Deliberately **403, not 404** — a 404 would let attackers probe which account UUIDs exist. |
+| `account_not_found`| `X-Account-Id` is a valid UUID but no such account exists. Deliberately **403, not 404** — a 404 would let attackers probe which account UUIDs exist. A **missing or malformed** header is `422 validation_error` instead. |
 | `account_not_safe` | Account flagged `is_safe: false` (domain reputation review). Sandbox bypasses this check. |
 | `domain_mismatch`  | `Origin` header host does not match the account's registered `domain` (secondary check). |
 | `account_error`    | Fallback for other account-domain failures.                                          |
@@ -65,6 +65,7 @@ Every error response carries a machine-readable
 | ------------------------- | ---- | ----------------------------------------------------------- |
 | `payment_creation_failed` | 500  | The payment could not be created.                           |
 | `payment_error`           | 500  | Generic payment-domain failure.                             |
+| `split_payment_error`     | 500  | Unclassified split-payment failure.                         |
 | `database_error`          | 500  | Temporary storage failure.                                  |
 | `domain_error`            | 500  | Unclassified domain failure.                                |
 | `internal_error`          | 500  | Internal server error — details never leave the server.     |
@@ -75,11 +76,13 @@ Every error response carries a machine-readable
 Unknown paths (`404`), wrong methods (`405`), and other framework-level errors use
 `code: "http_error"` in the same problem+json envelope.
 
-!!! note "No 400 or 429 from the public API"
+!!! note "No 400 from payment endpoints, no 429 from the application"
 
-    The public HTTP API does not currently emit 400 or 429 responses. Rate
-    limiting may return a 429 before a request reaches the API — retry with
-    backoff. The dashboard CSV export endpoint (session-authenticated, not the
+    Payment and account endpoints do not emit `400` (body problems are `422`),
+    and the application itself never answers `429` — rate limiting may return a
+    429 at the edge before a request reaches it; retry with backoff.
+    Exceptions: the x402 endpoints return `400` for malformed wire payloads,
+    and the dashboard CSV export endpoint (session-authenticated, not the
     public API) returns `429`/`413`/`400` responses — see
     [Reconciliation](../payments/reconciliation.md).
 
