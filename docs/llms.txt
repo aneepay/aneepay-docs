@@ -1,0 +1,108 @@
+# AneePay Docs
+
+> Non-custodial crypto payment acceptance on Polygon: USDT/USDC/DAI, hosted checkout, split payments, x402 for machine payments, CMS plugins, a partner program, and an unversioned public API at https://api.aneepay.com. Flat 0.5% on-chain fee.
+
+## Getting started
+
+- [Product overview](https://aneepay.github.io/aneepay-docs/getting-started/overview/): What AneePay is, the non-custodial model, the 0.5% fee, supported networks and tokens.
+- [Quickstart](https://aneepay.github.io/aneepay-docs/getting-started/quickstart/): First payment in 10 minutes — registration, account, POST /payments/, checkout_url, status.
+- [Account setup](https://aneepay.github.io/aneepay-docs/getting-started/account-setup/): Domain, EVM wallet, callback URLs, webhook_secret, is_safe, domain verification.
+- [Payment lifecycle](https://aneepay.github.io/aneepay-docs/getting-started/payment-lifecycle/): pending to success/failed, confirmations and finality.
+- [Glossary](https://aneepay.github.io/aneepay-docs/getting-started/glossary/): operation_id, checkout_url, status_url, gateway clone, facilitator, split, sandbox.
+
+## Merchant
+
+- [Merchant documentation](https://aneepay.github.io/aneepay-docs/merchant/): Index of the merchant documentation set.
+- [Create a payment](https://aneepay.github.io/aneepay-docs/payments/create-payment/): POST /payments/ — headers, body, response, errors, code examples.
+- [Hosted checkout and dApp](https://aneepay.github.io/aneepay-docs/payments/checkout-and-dapp/): Checkout page, QR, wallet deep link, network switching, redirects.
+- [Status and polling](https://aneepay.github.io/aneepay-docs/payments/status-and-polling/): GET /payments/{id} (public read) and polling guidance.
+- [Split payments](https://aneepay.github.io/aneepay-docs/payments/split-payments/): POST /payments/split/, recipients and shares in basis points, limits.
+- [Reconciliation](https://aneepay.github.io/aneepay-docs/payments/reconciliation/): Account payment listing, filters, pagination, CSV export.
+- [Networks, tokens, and fees](https://aneepay.github.io/aneepay-docs/payments/networks-tokens-fees/): Polygon 137 and Amoy 80002, token addresses, decimals, 0.5% fee, gas.
+- [Amounts, rounding, and limits](https://aneepay.github.io/aneepay-docs/payments/amounts-rounding-and-limits/): Decimal strings, precision, minimum amount, fee rounding, description limits.
+- [Refunds and non-features](https://aneepay.github.io/aneepay-docs/payments/refunds-cancellations-and-non-features/): No refunds, no customer cancellation, no subscriptions.
+- [Security and privacy](https://aneepay.github.io/aneepay-docs/payments/security-and-privacy/): What description exposes, public payment reads, server-side X-Account-Id.
+- [Idempotency and retries](https://aneepay.github.io/aneepay-docs/payments/idempotency-and-retries/): Payment creation idempotency, timeouts, unknown responses.
+
+## Webhooks
+
+- [Webhooks overview](https://aneepay.github.io/aneepay-docs/webhooks/overview/): When a webhook is sent, delivery timing and ordering.
+- [Payload and signature](https://aneepay.github.io/aneepay-docs/webhooks/payload-and-signature/): Payload v1, X-AneePay-Signature HMAC-SHA256, verification examples.
+- [Delivery, retries, idempotency](https://aneepay.github.io/aneepay-docs/webhooks/delivery-retries-idempotency/): 8 attempts, exponential backoff, idempotency by event_id, 2xx requirements.
+- [Testing webhooks](https://aneepay.github.io/aneepay-docs/webhooks/testing-and-replay/): Public test endpoint, sandbox drills, common errors.
+
+## Errors, sandbox, and support
+
+- [Errors](https://aneepay.github.io/aneepay-docs/errors/): RFC 7807 application/problem+json, code, request_id, status-to-code tables.
+- [Sandbox](https://aneepay.github.io/aneepay-docs/sandbox/): ?sandbox=yes, Amoy 80002, USDC, is_safe bypass.
+- [Testing your integration](https://aneepay.github.io/aneepay-docs/testing-your-integration/): Integration checklist and test scenarios.
+- [Security best practices](https://aneepay.github.io/aneepay-docs/security/best-practices/): Merchant checklist — server-side calls, signature verification, secrets.
+- [Troubleshooting](https://aneepay.github.io/aneepay-docs/troubleshooting/): Symptom, cause, solution for common failures.
+- [FAQ](https://aneepay.github.io/aneepay-docs/faq/): Merchant, customer, partner, and x402 questions grouped by topic.
+
+## CMS integrations
+
+- [CMS overview](https://aneepay.github.io/aneepay-docs/cms/): Supported platforms and the common plugin flow.
+- [WooCommerce](https://aneepay.github.io/aneepay-docs/cms/woocommerce/): Installation, settings, checkout, order statuses, webhook.
+- [OpenCart 3.x](https://aneepay.github.io/aneepay-docs/cms/opencart/): Installation, settings, checkout, order statuses, webhook.
+- [PrestaShop 1.7 / 8](https://aneepay.github.io/aneepay-docs/cms/prestashop/): Installation, settings, checkout, order statuses, webhook.
+- [Custom integration](https://aneepay.github.io/aneepay-docs/cms/custom-integration/): General recipe for any other site.
+- [Plugin development](https://aneepay.github.io/aneepay-docs/cms/plugin-development/): Building your own plugin — security, packaging, release.
+- [CMS troubleshooting](https://aneepay.github.io/aneepay-docs/cms/troubleshooting/): Plugin-specific problems and fixes.
+
+## x402 for AI agents
+
+- [x402 overview](https://aneepay.github.io/aneepay-docs/x402/): What x402 is, actors (client, resource server, facilitator, gateway), when to use it.
+- [Protocol and wire](https://aneepay.github.io/aneepay-docs/x402/protocol-and-wire/): Wire v2, exact/EVM scheme, EIP-3009, protocol headers and sequence.
+- [SDK quickstart](https://aneepay.github.io/aneepay-docs/x402/quickstart-sdk/): pip install aneepay-x402, PaymentConfig, protecting routes, testing.
+- [Facilitator API](https://aneepay.github.io/aneepay-docs/x402/facilitator-api/): /x402/supported, /merchant, /verify, /settle, protocol error codes.
+- [Gateway contracts](https://aneepay.github.io/aneepay-docs/x402/gateway-contracts/): Per-merchant gateway clone, Factory, addresses, upgrade policy.
+- [x402 testing](https://aneepay.github.io/aneepay-docs/x402/testing/): Testing middleware and using a mock facilitator.
+- [x402 security](https://aneepay.github.io/aneepay-docs/x402/security/): Replay protection, signatures, threat model.
+- [x402 troubleshooting](https://aneepay.github.io/aneepay-docs/x402/troubleshooting/): Verify/settle errors, settlement_pending, known limitations.
+
+## Partner program
+
+- [Partner overview](https://aneepay.github.io/aneepay-docs/partner/): 10% of the platform fee, lifetime attribution, statuses.
+- [Partner getting started](https://aneepay.github.io/aneepay-docs/partner/getting-started/): Email registration, magic link, DAI wallet, referral link.
+- [Commissions and payouts](https://aneepay.github.io/aneepay-docs/partner/commissions-and-payouts/): Accrual, 7-day hold, DAI payouts, payout history.
+- [Partner FAQ](https://aneepay.github.io/aneepay-docs/partner/faq/): Partner questions grouped by topic.
+
+## Merchant dashboard
+
+- [Dashboard overview](https://aneepay.github.io/aneepay-docs/dashboard/): Magic-link login and available features.
+- [Accounts](https://aneepay.github.io/aneepay-docs/dashboard/accounts/): Create, update, delete an account; domain, wallet, callbacks, webhook secret.
+- [Payments and export](https://aneepay.github.io/aneepay-docs/dashboard/payments-and-export/): Payment list, filters, details, CSV export.
+- [Metrics](https://aneepay.github.io/aneepay-docs/dashboard/metrics/): Account metrics and their meaning.
+
+## API reference
+
+- [API overview](https://aneepay.github.io/aneepay-docs/api/overview/): Base URL https://api.aneepay.com, no version segment, content types, change policy.
+- [API authentication](https://aneepay.github.io/aneepay-docs/api/authentication/): X-Account-Id, Origin, is_safe, public payment read.
+- [Endpoints](https://aneepay.github.io/aneepay-docs/api/endpoints/): Endpoint map for payments, split, accounts, x402, service.
+- [API errors](https://aneepay.github.io/aneepay-docs/api/errors/): RFC 7807 error format, codes, request_id.
+- [API webhooks](https://aneepay.github.io/aneepay-docs/api/webhooks/): Webhook contract summary.
+- [OpenAPI and ReDoc](https://aneepay.github.io/aneepay-docs/api/openapi-and-redoc/): How to open /redoc and /openapi.json, how to generate a client.
+- [API changelog](https://aneepay.github.io/aneepay-docs/api/changelog/): Additions, changes, deprecations of the API surface.
+- [Versioning and deprecation](https://aneepay.github.io/aneepay-docs/api/versioning-and-deprecation/): Change and deprecation policy without a version in the URL.
+
+## Developer reference
+
+- [Developers overview](https://aneepay.github.io/aneepay-docs/developers/): Entry point for contract and platform developers.
+- [Smart contracts](https://aneepay.github.io/aneepay-docs/developers/contracts/): Contract overview, roles, published addresses on Polygon 137 and Amoy 80002.
+- [Standard payment contract](https://aneepay.github.io/aneepay-docs/developers/contracts/standard-payment/): Functions, events, errors, on-chain fee.
+- [Split payment contract](https://aneepay.github.io/aneepay-docs/developers/contracts/split-payment/): Shares, limits, rounding, replay protection, events.
+- [x402 gateway and Factory](https://aneepay.github.io/aneepay-docs/developers/contracts/x402-gateway/): Gateway clone, Factory API, settlement functions.
+- [Security for developers](https://aneepay.github.io/aneepay-docs/developers/security/): Non-custodial model, verified contracts, enforced security properties.
+- [Known limitations](https://aneepay.github.io/aneepay-docs/developers/known-limitations/): What is not implemented — refunds, subscriptions, in-store payments, MCP.
+
+## Reference, meta, and legal
+
+- [Reference index](https://aneepay.github.io/aneepay-docs/reference/): Networks, tokens, and statuses at a glance.
+- [Statuses and error codes](https://aneepay.github.io/aneepay-docs/reference/statuses-and-codes/): Unified table of public statuses and error code families.
+- [Compatibility](https://aneepay.github.io/aneepay-docs/reference/compatibility/): Supported networks, tokens, wallets, browsers, CMS versions, SDK.
+- [Roadmap](https://aneepay.github.io/aneepay-docs/reference/roadmap/): Public roadmap without commitments.
+- [Security model](https://aneepay.github.io/aneepay-docs/security/security-model/): Non-custodial payments, on-chain fee, verified contracts, trust boundaries.
+- [Vulnerability disclosure](https://aneepay.github.io/aneepay-docs/security/vulnerability-disclosure/): How to report, scope, response targets, safe harbor.
+- [Terms and privacy](https://aneepay.github.io/aneepay-docs/legal/terms-and-privacy/): Links to the Terms of Service and Privacy Policy on aneepay.com.
+- [Changelog](https://aneepay.github.io/aneepay-docs/changelog/): Public product changelog.

@@ -118,8 +118,24 @@ nav:
       - OpenAPI and ReDoc: api/openapi-and-redoc.md
       - Changelog: api/changelog.md
       - Versioning and deprecation: api/versioning-and-deprecation.md
-  - Developers: developers/index.md
-  - Reference: reference/index.md
+  - Developers:
+      - Overview: developers/index.md
+      - Contracts:
+          - Overview: developers/contracts/index.md
+          - Standard payment: developers/contracts/standard-payment.md
+          - Split payment: developers/contracts/split-payment.md
+          - x402 gateway and Factory: developers/contracts/x402-gateway.md
+      - Security: developers/security.md
+      - Known limitations: developers/known-limitations.md
+  - Reference:
+      - Overview: reference/index.md
+      - Statuses and codes: reference/statuses-and-codes.md
+      - Compatibility: reference/compatibility.md
+      - Roadmap: reference/roadmap.md
+      - Security model: security/security-model.md
+      - Vulnerability disclosure: security/vulnerability-disclosure.md
+      - Terms and privacy: legal/terms-and-privacy.md
+      - Changelog: changelog.md
 
 plugins:
   - search
