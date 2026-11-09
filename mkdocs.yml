@@ -1,5 +1,5 @@
-site_name: Aneepay Docs
-site_description: Documentation for the Aneepay platform
+site_name: AneePay Docs
+site_description: "AneePay documentation: crypto payment acceptance, CMS plugins, x402, and API"
 site_url: https://aneepay.github.io/aneepay-docs/
 repo_url: https://github.com/aneepay/aneepay-docs
 repo_name: aneepay/aneepay-docs
@@ -20,8 +20,9 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
-    - navigation.sections
+    - navigation.indexes
     - navigation.top
+    - navigation.tracking
     - navigation.footer
     - search.highlight
     - content.code.copy
@@ -32,7 +33,11 @@ theme:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
@@ -44,19 +49,92 @@ markdown_extensions:
       permalink: true
 
 nav:
-  - Getting Started:
-      - index.md
-      - quickstart.md
-  - Guides:
-      - guides/getting-started.md
-      - guides/payments.md
-      - guides/webhooks.md
+  - Home: index.md
+  - Getting started:
+      - Product overview: getting-started/overview.md
+      - Quickstart: getting-started/quickstart.md
+      - Account setup: getting-started/account-setup.md
+      - Payment lifecycle: getting-started/payment-lifecycle.md
+      - Glossary: getting-started/glossary.md
+  - Merchant:
+      - Overview: merchant/index.md
+  - Payments:
+      - Create a payment: payments/create-payment.md
+      - Hosted checkout and dApp: payments/checkout-and-dapp.md
+      - Status and polling: payments/status-and-polling.md
+      - Split payments: payments/split-payments.md
+      - Reconciliation: payments/reconciliation.md
+      - Networks, tokens, and fees: payments/networks-tokens-fees.md
+      - Amounts, rounding, and limits: payments/amounts-rounding-and-limits.md
+      - Refunds and non-features: payments/refunds-cancellations-and-non-features.md
+      - Security and privacy: payments/security-and-privacy.md
+      - Idempotency and retries: payments/idempotency-and-retries.md
+  - Webhooks:
+      - Overview: webhooks/overview.md
+      - Payload and signature: webhooks/payload-and-signature.md
+      - Delivery, retries, idempotency: webhooks/delivery-retries-idempotency.md
+      - Testing webhooks: webhooks/testing-and-replay.md
+  - Errors, sandbox, and support:
+      - Errors: errors/index.md
+      - Sandbox: sandbox.md
+      - Testing your integration: testing-your-integration.md
+      - Security best practices: security/best-practices.md
+      - Troubleshooting: troubleshooting.md
+      - FAQ: faq.md
+  - CMS:
+      - Overview: cms/index.md
+      - WooCommerce: cms/woocommerce.md
+      - OpenCart 3.x: cms/opencart.md
+      - PrestaShop 1.7 / 8: cms/prestashop.md
+      - Custom integration: cms/custom-integration.md
+      - Plugin development: cms/plugin-development.md
+      - Troubleshooting: cms/troubleshooting.md
+  - x402:
+      - Overview: x402/index.md
+      - Protocol and wire: x402/protocol-and-wire.md
+      - SDK quickstart: x402/quickstart-sdk.md
+      - Facilitator API: x402/facilitator-api.md
+      - Gateway contracts: x402/gateway-contracts.md
+      - Testing: x402/testing.md
+      - Security: x402/security.md
+      - Troubleshooting: x402/troubleshooting.md
+  - Partner:
+      - Overview: partner/index.md
+      - Getting started: partner/getting-started.md
+      - Commissions and payouts: partner/commissions-and-payouts.md
+      - FAQ: partner/faq.md
+  - Dashboard:
+      - Overview: dashboard/overview.md
+      - Accounts: dashboard/accounts.md
+      - Payments and export: dashboard/payments-and-export.md
+      - Metrics: dashboard/metrics.md
   - API:
-      - api/overview.md
-      - api/authentication.md
-      - api/endpoints.md
-  - About:
-      - about.md
+      - Overview: api/overview.md
+      - Authentication: api/authentication.md
+      - Endpoints: api/endpoints.md
+      - Errors: api/errors.md
+      - Webhooks: api/webhooks.md
+      - OpenAPI and ReDoc: api/openapi-and-redoc.md
+      - Changelog: api/changelog.md
+      - Versioning and deprecation: api/versioning-and-deprecation.md
+  - Developers:
+      - Overview: developers/index.md
+      - Security: developers/security.md
+      - Known limitations: developers/known-limitations.md
+  - Smart contracts:
+      - Overview: developers/contracts/index.md
+      - Standard payment: developers/contracts/standard-payment.md
+      - Split payment: developers/contracts/split-payment.md
+      - x402 gateway and Factory: developers/contracts/x402-gateway.md
+  - Reference:
+      - Overview: reference/index.md
+      - Statuses and codes: reference/statuses-and-codes.md
+      - Compatibility: reference/compatibility.md
+      - Roadmap: reference/roadmap.md
+      - Security model: security/security-model.md
+      - Vulnerability disclosure: security/vulnerability-disclosure.md
+      - Terms and privacy: legal/terms-and-privacy.md
+      - Changelog: changelog.md
 
 plugins:
   - search
