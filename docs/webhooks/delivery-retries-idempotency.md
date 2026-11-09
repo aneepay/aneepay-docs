@@ -27,7 +27,7 @@ can build a resilient receiver.
 
 After a failed attempt AneePay schedules the next one with exponential backoff:
 
-```
+```text
 delay = min(2 s × 2^(attempts − 1), 300 s)
 ```
 

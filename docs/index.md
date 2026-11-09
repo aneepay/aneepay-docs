@@ -39,11 +39,21 @@ the payer to your wallet. The platform never holds or controls your assets.
 
 - [Getting started](getting-started/overview.md) — product model, quickstart,
   account setup, payment lifecycle, glossary.
-- [Merchant](merchant/index.md) — payments, split payments, webhooks, sandbox.
+- [Merchant](merchant/index.md) — entry point to the merchant documentation.
+- [Payments](payments/create-payment.md) — create a payment, checkout, status,
+  split payments, reconciliation, fees, refunds, security, idempotency.
+- [Webhooks](webhooks/overview.md) — payload, signature verification, delivery,
+  retries, and testing.
+- [Errors, sandbox, and support](errors/index.md) — error format, sandbox,
+  troubleshooting, FAQ, and security best practices.
 - [CMS](cms/index.md) — plugins for WooCommerce, OpenCart, PrestaShop.
 - [x402](x402/index.md) — protocol, SDK, facilitator API.
 - [Partner](partner/index.md) — referral program and payouts.
+- [Dashboard](dashboard/overview.md) — accounts, payments, export, and metrics.
 - [API](api/overview.md) — endpoints, authentication, errors.
+- [Developers](developers/index.md) — platform and contract developer entry point.
+- [Smart contracts](developers/contracts/index.md) — standard, split, and x402
+  gateway contracts.
 - [Reference](reference/index.md) — statuses, networks, tokens, error codes.
 
 ## Useful links

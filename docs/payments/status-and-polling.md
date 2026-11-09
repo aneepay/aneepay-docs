@@ -39,8 +39,8 @@ No authentication headers. The path parameter is the payment UUID returned by
 | Field | Description |
 | --- | --- |
 | `id` | Payment UUID. |
-| `payment_type` | `A` (Standard) or `B` (Splits). Base fulfillment decisions on `status`, not on `payment_type`. |
-| `payment_type_display` | Human-readable label ("Standard Payment", "Splits Payment"). |
+| `payment_type` | `A` (Standard), `B` (Splits), or `C` (Confirmed). Base fulfillment decisions on `status`, not on `payment_type`. |
+| `payment_type_display` | Human-readable label ("Standard Payment", "Splits Payment", "Confirmed Payment"). |
 | `status` | `pending` \| `success` \| `failed`. |
 | `status_display` | Human-readable label. |
 | `is_confirmed` | `true` once the payment is finalized on-chain. |

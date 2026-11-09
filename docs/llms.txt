@@ -13,6 +13,9 @@
 ## Merchant
 
 - [Merchant documentation](https://aneepay.github.io/aneepay-docs/merchant/): Index of the merchant documentation set.
+
+## Payments
+
 - [Create a payment](https://aneepay.github.io/aneepay-docs/payments/create-payment/): POST /payments/ — headers, body, response, errors, code examples.
 - [Hosted checkout and dApp](https://aneepay.github.io/aneepay-docs/payments/checkout-and-dapp/): Checkout page, QR, wallet deep link, network switching, redirects.
 - [Status and polling](https://aneepay.github.io/aneepay-docs/payments/status-and-polling/): GET /payments/{id} (public read) and polling guidance.
@@ -89,12 +92,15 @@
 ## Developer reference
 
 - [Developers overview](https://aneepay.github.io/aneepay-docs/developers/): Entry point for contract and platform developers.
+- [Security for developers](https://aneepay.github.io/aneepay-docs/developers/security/): Non-custodial model, verified contracts, enforced security properties.
+- [Known limitations](https://aneepay.github.io/aneepay-docs/developers/known-limitations/): What is not implemented — refunds, subscriptions, in-store payments, MCP.
+
+## Smart contracts
+
 - [Smart contracts](https://aneepay.github.io/aneepay-docs/developers/contracts/): Contract overview, roles, published addresses on Polygon 137 and Amoy 80002.
 - [Standard payment contract](https://aneepay.github.io/aneepay-docs/developers/contracts/standard-payment/): Functions, events, errors, on-chain fee.
 - [Split payment contract](https://aneepay.github.io/aneepay-docs/developers/contracts/split-payment/): Shares, limits, rounding, replay protection, events.
 - [x402 gateway and Factory](https://aneepay.github.io/aneepay-docs/developers/contracts/x402-gateway/): Gateway clone, Factory API, settlement functions.
-- [Security for developers](https://aneepay.github.io/aneepay-docs/developers/security/): Non-custodial model, verified contracts, enforced security properties.
-- [Known limitations](https://aneepay.github.io/aneepay-docs/developers/known-limitations/): What is not implemented — refunds, subscriptions, in-store payments, MCP.
 
 ## Reference, meta, and legal
 

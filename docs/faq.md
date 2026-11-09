@@ -95,9 +95,9 @@ partial capture exists. Your order stays unpaid; the customer can retry from
 
 ### Is AneePay suitable for micropayments?
 
-Yes, with one caveat: the 0.5% fee is rounded in whole token units on-chain, so
-tiny amounts can round to a **zero fee**. There is no artificial minimum beyond
-`amount > 0` — details in
+Yes, with one caveat: the 0.5% fee is calculated in token base units and rounded
+down, so for 6-decimal stablecoins an amount below 0.0002 produces a **zero fee**.
+There is no artificial minimum beyond `amount > 0` — details in
 [Amounts, rounding, and limits](payments/amounts-rounding-and-limits.md).
 
 ### Why is my account marked "unsafe"?

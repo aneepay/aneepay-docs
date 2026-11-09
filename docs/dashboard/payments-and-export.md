@@ -75,7 +75,7 @@ the dashboard is a monitoring view, not the contract.
   or newline) are prefixed with `'`, so an export cannot execute anything in
   your spreadsheet. Negative numbers such as `-12.5` are left unchanged.
 
-### Columns
+### CSV columns
 
 `Date`, `Status`, `Type`, `Amount`, `Token`, `Network`, `Account`,
 `Description`, `Fee`, `Net Amount`, `Confirmed`, `Confirmed At`, `Recipients`,

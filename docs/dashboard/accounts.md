@@ -70,7 +70,7 @@ before the button becomes active. **Cancel** returns you to the accounts list.
 
 ### What the server checks
 
-**Domain**
+#### Domain
 
 - Normalized before saving: scheme, `www.`, and path are stripped, the value
   is lowercased - `https://www.Example.com/shop` is stored as
@@ -79,7 +79,7 @@ before the button becomes active. **Cancel** returns you to the accounts list.
 - Checked against Google Safe Browsing when the account is created; a flagged
   domain is rejected (see [error messages](#error-messages-you-may-see)).
 
-**Callback URLs (`success_url`, `fail_url`, `status_url`)**
+#### Callback URLs (`success_url`, `fail_url`, `status_url`)
 
 - Must use `http` or `https` and contain a host.
 - Hosts that are not reachable from the public internet - loopback, private,
@@ -88,7 +88,7 @@ before the button becomes active. **Cancel** returns you to the accounts list.
 - These are pages on **your** site, not AneePay pages - see
   [Account setup](../getting-started/account-setup.md#account-fields).
 
-**Wallet**
+#### Wallet
 
 - Any valid EVM address; an invalid one is rejected with
   `Invalid EVM address format`.
