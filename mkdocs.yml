@@ -20,7 +20,6 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
-    - navigation.sections
     - navigation.indexes
     - navigation.top
     - navigation.tracking
@@ -58,23 +57,23 @@ nav:
       - Payment lifecycle: getting-started/payment-lifecycle.md
       - Glossary: getting-started/glossary.md
   - Merchant:
-      - merchant/index.md
-      - Payment acceptance:
-          - Create a payment: payments/create-payment.md
-          - Hosted checkout and dApp: payments/checkout-and-dapp.md
-          - Status and polling: payments/status-and-polling.md
-          - Split payments: payments/split-payments.md
-          - Reconciliation: payments/reconciliation.md
-          - Networks, tokens, and fees: payments/networks-tokens-fees.md
-          - Amounts, rounding, and limits: payments/amounts-rounding-and-limits.md
-          - Refunds and non-features: payments/refunds-cancellations-and-non-features.md
-          - Security and privacy: payments/security-and-privacy.md
-          - Idempotency and retries: payments/idempotency-and-retries.md
-      - Webhooks:
-          - Webhooks overview: webhooks/overview.md
-          - Payload and signature: webhooks/payload-and-signature.md
-          - Delivery, retries, idempotency: webhooks/delivery-retries-idempotency.md
-          - Testing webhooks: webhooks/testing-and-replay.md
+      - Overview: merchant/index.md
+  - Payments:
+      - Create a payment: payments/create-payment.md
+      - Hosted checkout and dApp: payments/checkout-and-dapp.md
+      - Status and polling: payments/status-and-polling.md
+      - Split payments: payments/split-payments.md
+      - Reconciliation: payments/reconciliation.md
+      - Networks, tokens, and fees: payments/networks-tokens-fees.md
+      - Amounts, rounding, and limits: payments/amounts-rounding-and-limits.md
+      - Refunds and non-features: payments/refunds-cancellations-and-non-features.md
+      - Security and privacy: payments/security-and-privacy.md
+      - Idempotency and retries: payments/idempotency-and-retries.md
+  - Webhooks:
+      - Overview: webhooks/overview.md
+      - Payload and signature: webhooks/payload-and-signature.md
+      - Delivery, retries, idempotency: webhooks/delivery-retries-idempotency.md
+      - Testing webhooks: webhooks/testing-and-replay.md
   - Errors, sandbox, and support:
       - Errors: errors/index.md
       - Sandbox: sandbox.md
@@ -120,13 +119,13 @@ nav:
       - Versioning and deprecation: api/versioning-and-deprecation.md
   - Developers:
       - Overview: developers/index.md
-      - Contracts:
-          - Overview: developers/contracts/index.md
-          - Standard payment: developers/contracts/standard-payment.md
-          - Split payment: developers/contracts/split-payment.md
-          - x402 gateway and Factory: developers/contracts/x402-gateway.md
       - Security: developers/security.md
       - Known limitations: developers/known-limitations.md
+  - Smart contracts:
+      - Overview: developers/contracts/index.md
+      - Standard payment: developers/contracts/standard-payment.md
+      - Split payment: developers/contracts/split-payment.md
+      - x402 gateway and Factory: developers/contracts/x402-gateway.md
   - Reference:
       - Overview: reference/index.md
       - Statuses and codes: reference/statuses-and-codes.md
