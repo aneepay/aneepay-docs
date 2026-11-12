@@ -1,0 +1,19 @@
+# Link checker configuration for https://github.com/lycheeverse/lychee.
+# The CI job runs from the repository root, so this file applies automatically.
+
+# Bot protection on these hosts answers GitHub Actions runners with 403
+# even though the pages are publicly reachable.
+exclude = [
+  "^https://(www\\.)?polygonscan\\.com",
+  "^https://amoy\\.polygonscan\\.com",
+  # Swagger UI is intentionally disabled on the API host; the URL is documented
+  # as a negative example and therefore returns 404 on purpose.
+  "^https://api\\.aneepay\\.com/docs/?$",
+  # Platform URLs that are documented but not deployed yet.
+  "^https://aneepay\\.com/partner/register/?$",
+  "^https://aneepay\\.com/schemas/webhook-v1\\.json$",
+]
+
+max_retries = 3
+retry_wait_time = 2
+timeout = 30

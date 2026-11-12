@@ -44,7 +44,7 @@ flow; production requests must not carry it.
 
 ## Funding a test payment
 
-1. Get test POL from any [Amoy faucet](https://docs.polygon.technology/tools/wallets/faucets/).
+1. Get test POL from any [Amoy faucet](https://docs.polygon.technology/tools/gas/matic-faucet).
 2. Get test USDC — ask in [support](#support) for the current faucet source, or
    bridge via the Amoy tooling your team uses.
 3. Complete the checkout as a customer would: MetaMask switched to **Amoy**,
