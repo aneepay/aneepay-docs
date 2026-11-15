@@ -1,6 +1,6 @@
 site_name: AneePay Docs
 site_description: "AneePay documentation: crypto payment acceptance, CMS plugins, x402, and API"
-site_url: https://aneepay.github.io/aneepay-docs/
+site_url: https://docs.aneepay.com/
 repo_url: https://github.com/aneepay/aneepay-docs
 repo_name: aneepay/aneepay-docs
 edit_uri: edit/main/docs/
