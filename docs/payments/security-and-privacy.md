@@ -51,11 +51,14 @@ recipient account balances.
 
 ## `X-Account-Id` only where merchant binding matters
 
-The header (or the account UUID in the path, for account-scoped endpoints) is
-required exactly where the server must know **which merchant** is acting:
+The header is required exactly where the server must know **which merchant** is
+acting:
 
 - `POST /payments/`, `POST /payments/split/` — creating payments;
-- `GET /accounts/{account_id}/payments` — reading an account's history.
+- `GET /accounts/{account_id}/payments` — reading an account's history; the
+  header must equal the account UUID in the path, otherwise `403
+  account_id_mismatch`;
+- `GET /x402/merchant`, `POST /x402/settle` — x402 facilitator calls.
 
 It is **not** required on `GET /payments/{id}` — see above.
 
@@ -68,9 +71,10 @@ wallet addresses only, never labels containing personal information.
 
 ## Webhook secrets
 
-Each account has a `webhook_secret`, shown **once** at creation. Use it only
-to verify `X-AneePay-Signature` (HMAC-SHA256 of the raw body) on incoming
-webhooks — never in any client-facing context. Details:
+Each account has a `webhook_secret`. It is generated when the account is
+created and stays visible on the account card in the dashboard for as long as
+you need it. Use it only to verify `X-AneePay-Signature` (HMAC-SHA256 of the raw
+body) on incoming webhooks — never in any client-facing context. Details:
 [Payload and signature](../webhooks/payload-and-signature.md).
 
 ## Origin check and `is_safe`

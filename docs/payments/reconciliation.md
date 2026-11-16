@@ -11,25 +11,29 @@ audits, finance exports).
 `GET /accounts/{account_id}/payments` returns payments for one account,
 newest first.
 
-!!! note "Account UUID is the scope"
-    The account UUID in the path identifies whose payments you read. That
-    UUID doubles as your API key (`X-Account-Id`) — treat the whole URL as
-    server-side material and do not expose it to browsers or logs.
+!!! note "Account UUID is the scope - and the header must match it"
+    The account UUID in the path identifies whose payments you read, and the
+    same UUID must be sent in `X-Account-Id`; a mismatch fails with
+    `403 account_id_mismatch`. That UUID doubles as your API key - treat the
+    whole URL as server-side material and do not expose it to browsers or logs.
 
 ### Query parameters
 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `page` | integer | `1` | Page number. |
-| `limit` | integer | `20` | Items per page. |
-| `type` | string | — | `A` (Standard) or `B` (Splits). |
-| `status` | string | — | `pending`, `success`, `failed`. |
-| `created_from` | ISO-8601 | — | Creation time, from (naive timestamps are treated as UTC). |
-| `created_to` | ISO-8601 | — | Creation time, to. |
+| `limit` | integer | `20` | Items per page, `1`-`100`. Values above 100 fail with `422 validation_error`. |
+| `type` | string | — | `A` (Standard), `B` (Splits), or `C` (Confirmed). |
+| `status` | string | — | `pending`, `success`, `failed`, or `cancelled`. |
+| `created_from` | ISO-8601 | — | Creation time, from (naive timestamps are treated as UTC). Invalid values fail with `422`. |
+| `created_to` | ISO-8601 | — | Creation time, to. Invalid values fail with `422`. |
 | `amount_from` | decimal | — | Minimum amount (`> 0`). |
 | `amount_to` | decimal | — | Maximum amount (`> 0`). |
 
-Sorting is always **descending by `created_at`** (newest first).
+Sorting is always **descending by `created_at`** (newest first). An unknown
+account UUID that still matches the header returns an empty `items` list with
+`total: 0` - this endpoint checks the header against the path, not that the
+account exists.
 
 ### Example requests
 

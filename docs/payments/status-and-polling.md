@@ -41,12 +41,12 @@ No authentication headers. The path parameter is the payment UUID returned by
 | `id` | Payment UUID. |
 | `payment_type` | `A` (Standard), `B` (Splits), or `C` (Confirmed). Base fulfillment decisions on `status`, not on `payment_type`. |
 | `payment_type_display` | Human-readable label ("Standard Payment", "Splits Payment", "Confirmed Payment"). |
-| `status` | `pending` \| `success` \| `failed`. |
+| `status` | `pending` \| `success` \| `failed` \| `cancelled`. `cancelled` exists for administrative/manual corrections and is never produced by the payment flow; treat it as terminal and do not fulfil. |
 | `status_display` | Human-readable label. |
 | `is_confirmed` | `true` once the payment is finalized on-chain. |
 | `created_at` | ISO-8601 creation time (UTC). |
 | `confirmed_at` | ISO-8601 confirmation time, or `null`. |
-| `payment_details` | Provider metadata; **schema varies by `payment_type`**. Commonly: `amount`, `token`, `network`, `description`. After success it also carries `fee` and `net_amount`; split payments additionally carry `recipients`. |
+| `payment_details` | Provider metadata; **schema varies by `payment_type`**. Commonly: `amount`, `token`, `network`, `description`. After success it also carries `fee` and `net_amount`; split payments additionally carry `recipients`. x402-settled payments carry **only** an `x402` object (`amount_atomic`, `fee_atomic`, `net_atomic`, `payTo`, `state`, plus `transaction` once broadcast) - no `amount`/`token`/`network`/`description` keys at all, so read those from the settlement response instead. |
 
 ## Success example
 
@@ -106,12 +106,40 @@ Guidance:
 - **Never fulfill based on the customer's browser redirect** — fulfill on a
   verified webhook or this endpoint.
 
+## Lightweight status endpoint on the main site
+
+The hosted checkout and dApp pages poll a smaller endpoint on `aneepay.com`,
+which you can use the same way:
+
+| Method | Path | Auth |
+| --- | --- | --- |
+| `GET` | `https://aneepay.com/payments/{payment_id}/status/` | none |
+
+```json title="status.json"
+{
+  "id": "3f8a1c2e-9b4d-4e6f-8a1c-2e9b4d4e6f8a",
+  "status": "success",
+  "confirmed": true,
+  "network": "polygon",
+  "is_sandbox": false
+}
+```
+
+- Five fields only: `id`, `status`, `confirmed`, `network`, `is_sandbox`.
+- **120 requests per minute per IP**; above that it answers `429` with
+  `{"detail": "Too many requests"}`.
+- Answers `Cache-Control: no-store`; an unknown payment UUID is `404`.
+- `network` falls back to `amoy` for sandbox payments and `polygon` otherwise
+  when the stored payload has no `network` key.
+
 ## Errors
 
 | Status | `code` | When |
 | --- | --- | --- |
 | `404` | `payment_not_found` | Unknown payment UUID. |
 | `422` | `validation_error` | Path parameter is not a valid UUID. |
+| `429` | `rate_limited` | More than 600 requests per minute from one IP. Honour `Retry-After`. |
+| `413` | `payload_too_large` | The request body exceeds 1 MiB (enforced on `GET` too). |
 | `500` | `internal_error` | Server-side error. |
 
 ## Sandbox
