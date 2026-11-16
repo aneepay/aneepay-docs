@@ -23,7 +23,8 @@ are described together in the [API reference](../api/overview.md) (ReDoc:
 
 Protocol failures are **not** HTTP errors: they are returned as `200` with
 `isValid: false` or `success: false` plus an error code. HTTP `4xx`/`5xx` mean
-transport-level problems (bad header, unknown account, unavailable service).
+transport-level problems (bad header, unknown account, unavailable service,
+malformed wire body).
 
 ## `GET /x402/supported`
 
@@ -45,7 +46,7 @@ building offers — the SDK calls it through `X402FacilitatorClient.supported()`
     }
   ],
   "extensions": [],
-  "signers": { "eip155:": ["0x99E5…7bf6"] }
+  "signers": { "eip155:*": ["0x99E5…7bf6"] }
 }
 ```
 
@@ -144,15 +145,21 @@ Outcomes:
 
 ## HTTP errors
 
-| Status   | `code`              | When                                  |
-| -------- | --------            | ------                                |
-| `422`    | `validation_error`  | `X-Account-Id` missing or not a UUID  |
-| `403`    | `account_not_found` | Unknown account                       |
-| `403`    | `account_not_safe`  | Account disabled / not safe to settle |
-| `403`    | —                   | Origin check failed                   |
+| Status   | `code`               | When                                                                 |
+| -------- | --------             | ------                                                               |
+| `400`    | `invalid_x402_version` | `x402Version` is missing or not `2`                                |
+| `400`    | `invalid_payload`    | Body is not a valid wire-v2 payload                                  |
+| `422`    | `validation_error`   | `X-Account-Id` missing or not a UUID                                 |
+| `403`    | `account_not_found`  | Unknown account                                                      |
+| `403`    | `account_not_safe`   | Account disabled / not safe to settle                                |
+| `413`    | `payload_too_large`  | Body above the 1 MiB request limit                                   |
+| `429`    | `rate_limited`       | Above 120 requests/minute per IP on `/x402/verify`                    |
+| `503`    | `service_busy`       | Concurrency cap hit (20 `/verify`, 5 `/settle` in flight); `Retry-After: 1` |
 
-Problem responses follow RFC 7807 (`application/problem+json`) with `code` and
-`request_id`, as everywhere else in the [API](../api/errors.md#error-format).
+The `Origin` header is **not** checked here — it only gates `POST /payments/` and
+`POST /payments/split/`. Problem responses follow RFC 7807
+(`application/problem+json`) with `code` and `request_id`, as everywhere else in
+the [API](../api/errors.md#error-format).
 
 ## Protocol error codes
 
@@ -161,10 +168,8 @@ error codes):
 
 | Code                                                     | Meaning                                  |
 | ------                                                   | ---------                                |
-| `invalid_scheme` / `unsupported_scheme`                  | Scheme is not `exact` / not supported    |
-| `invalid_x402_version`                                   | Not wire v2                              |
+| `unsupported_scheme`                                     | Scheme is not `exact`                    |
 | `invalid_network`                                        | Network not supported or not serviceable |
-| `invalid_payload`                                        | Payload failed structural validation     |
 | `invalid_payment_requirements`                           | Offer fields inconsistent                |
 | `invalid_exact_evm_payload_signature`                    | EIP-712 signature does not verify        |
 | `invalid_exact_evm_payload_recipient_mismatch`           | `authorization.to` ≠ `payTo`             |
