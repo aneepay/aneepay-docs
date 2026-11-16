@@ -11,11 +11,13 @@ is the index you scan first.
 | `pending` | Payment created; waiting for on-chain confirmation | `POST /payments/` response, status polling |
 | `success` | Settlement confirmed on-chain; final | Webhook, `GET /payments/{id}` |
 | `failed` | Settlement did not complete; final | Webhook, `GET /payments/{id}` |
+| `cancelled` | Administrative/manual marker; final. Never produced by the payment flow | `GET /payments/{id}` |
 
 There is no customer cancellation and no refund: a pending payment moves to
 `success` or `failed` — see
-[Payment lifecycle](../getting-started/payment-lifecycle.md). Webhooks fire only
-for `success`.
+[Payment lifecycle](../getting-started/payment-lifecycle.md). `cancelled` exists
+only for support interventions and is never emitted by the API or the listener.
+Webhooks fire only for `success`.
 
 ## API error codes
 
@@ -25,11 +27,14 @@ All API errors use RFC 7807 `application/problem+json` with a machine-readable
 
 | HTTP status | Codes |
 | --- | --- |
-| 403 | `account_not_found`, `account_not_safe`, `domain_mismatch`, `account_error` |
+| 400 | `invalid_x402_version`, `invalid_payload` (x402 transport only) |
+| 403 | `account_not_found`, `account_not_safe`, `domain_mismatch`, `account_id_mismatch`, `account_error` |
 | 404 | `payment_not_found` |
+| 413 | `payload_too_large` (body over 1 MiB, on any method) |
 | 422 | `validation_error`, `split_owner_not_recipient`, `split_sandbox_unsupported` |
+| 429 | `rate_limited` (per-IP limit, carries `Retry-After`) |
 | 500 | `payment_creation_failed`, `split_payment_error`, `database_error`, `payment_error`, `domain_error`, `internal_error` |
-| 503 | `split_payment_unavailable` |
+| 503 | `split_payment_unavailable`, `service_busy` (x402 verify/settle concurrency) |
 | other | `http_error` (framework-level 404, 405, …) |
 
 Validation failures add an `errors[]` array with `loc`, `msg`, and `type` per
@@ -61,7 +66,7 @@ steps are in [x402 troubleshooting](../x402/troubleshooting.md).
 | Network | Chain ID | Role |
 | --- | --- | --- |
 | Polygon mainnet | 137 | Payment acceptance, x402 settlement, partner payouts |
-| Amoy testnet | 80002 | Sandbox only (`?sandbox=yes`); no split payments, no x402 |
+| Amoy testnet | 80002 | Sandbox only (`?sandbox=yes`), including split payments; no x402 |
 
 Full matrix with token addresses: the [Reference index](index.md) and
 [Networks, tokens, and fees](../payments/networks-tokens-fees.md).

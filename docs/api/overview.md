@@ -38,7 +38,7 @@ text format.
 | Timestamps | ISO-8601 UTC. |
 | Unknown request fields | Unknown **body** fields are rejected with `422 validation_error` - a typo like `"amt"` is an error, not a silent default. Unknown query parameters are ignored. |
 | Unknown response fields | Possible at any time (new fields are additive) - ignore fields you do not know. |
-| Pagination | `page` / `limit` query parameters; `limit` defaults to 20 and no maximum is enforced. Responses carry `items`, `total`, `page`, `limit`, `has_next`. |
+| Pagination | `page` / `limit` query parameters; `limit` defaults to 20 and is capped at 100 - larger values are rejected with `422 validation_error`. Responses carry `items`, `total`, `page`, `limit`, `has_next`. |
 | Error handling | Branch on the machine-readable `code`, never on `detail` text. |
 
 ## Access and limits
@@ -49,10 +49,14 @@ text format.
   [Authentication](authentication.md).
 - Calls are expected from a server: CORS is disabled by default, so browser
   JavaScript cannot read API responses from another origin.
-- Rate limiting is applied before requests reach the API. Retry `429`
-  responses with backoff. (Dashboard endpoints are session-authenticated and
-  have their own limits - see
-  [Payments and export](../dashboard/payments-and-export.md).)
+- Rate limiting is applied in-app, per client IP, in fixed one-minute windows:
+  `GET /payments/{payment_id}` allows 600 requests per minute,
+  `POST /x402/verify` 120, and `POST /x402/verify`/`POST /x402/settle` also
+  cap concurrency (20 and 5) with `503 service_busy`. A `429` carries
+  `Retry-After`; retry after that delay, then back off
+  ([Errors](../errors/index.md#429-rate-limited)). Dashboard endpoints are
+  session-authenticated and have their own limits - see
+  [Payments and export](../dashboard/payments-and-export.md).
 
 ## Documentation
 

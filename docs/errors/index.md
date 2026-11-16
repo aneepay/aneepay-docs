@@ -43,6 +43,7 @@ Every error response carries a machine-readable
 | `account_not_found`| `X-Account-Id` is a valid UUID but no such account exists. Deliberately **403, not 404** — a 404 would let attackers probe which account UUIDs exist. A **missing or malformed** header is `422 validation_error` instead. |
 | `account_not_safe` | Account flagged `is_safe: false` (domain reputation review). Sandbox bypasses this check. |
 | `domain_mismatch`  | `Origin` header host does not match the account's registered `domain` (secondary check). |
+| `account_id_mismatch` | `GET /accounts/{account_id}/payments` carried an `X-Account-Id` that differs from the `account_id` in the path. |
 | `account_error`    | Fallback for other account-domain failures.                                          |
 
 ### 404 — not found
@@ -57,7 +58,38 @@ Every error response carries a machine-readable
 | -------------------------- | ------------------------------------------------------------------------ |
 | `validation_error`         | Body/query failed schema validation. `errors[]` lists `loc`/`msg`/`type` per field. |
 | `split_owner_not_recipient`| Split: the account wallet is missing from `recipients`.                  |
-| `split_sandbox_unsupported`| Split payments are not available in sandbox for your account.            |
+| `split_sandbox_unsupported`| Sandbox split payments are not available on this deployment: the Amoy split contract is not configured. The public deployment supports them. |
+
+### 413 — payload too large
+
+| `code`                  | When                                                                 |
+| ----------------------- | -------------------------------------------------------------------- |
+| `payload_too_large`     | The request body exceeds 1 MiB. Enforced for **every** method, including `GET`, before routing — a large body on a read endpoint is rejected just the same. |
+
+### 429 — rate limited
+
+| `code`           | When                                                                       |
+| ---------------- | -------------------------------------------------------------------------- |
+| `rate_limited`   | The per-IP fixed-window limit for the endpoint was exceeded. The response carries a `Retry-After` header with the number of seconds to wait. |
+
+| Endpoint | Limit |
+| --- | --- |
+| `GET /payments/{payment_id}` | 600 requests per minute per IP |
+| `POST /x402/verify` | 120 requests per minute per IP |
+| `GET /payments/{payment_id}/status/` (main site) | 120 requests per minute per IP |
+| `GET /dashboard/payments/export/` (main site, session) | 60 requests per minute per IP |
+
+Limits are counted in memory per application process. Retrying immediately does
+not help — honour `Retry-After`, then back off. `POST /payments/`,
+`POST /payments/split/`, `GET /accounts/{account_id}/payments`, and the whole
+x402 settle path have no in-app per-minute limit.
+
+### 503 — temporarily unavailable
+
+| `code`           | When                                                                       |
+| ---------------- | -------------------------------------------------------------------------- |
+| `service_busy`   | Too many concurrent `POST /x402/verify` (20) or `POST /x402/settle` (5) requests are in flight. Returns `Retry-After: 1`; retry shortly. |
+| `split_payment_unavailable` | Split payments are not configured on this deployment for that network. |
 
 ### 5xx — server side
 
@@ -69,22 +101,21 @@ Every error response carries a machine-readable
 | `database_error`          | 500  | Temporary storage failure.                                  |
 | `domain_error`            | 500  | Unclassified domain failure.                                |
 | `internal_error`          | 500  | Internal server error — details never leave the server.     |
-| `split_payment_unavailable` | 503 | Split payments are not available on this network.         |
 
 ### 405 and other framework-level errors
 
 Unknown paths (`404`), wrong methods (`405`), and other framework-level errors use
 `code: "http_error"` in the same problem+json envelope.
 
-!!! note "No 400 from payment endpoints, no 429 from the application"
+!!! note "Which statuses the application really emits"
 
     Payment and account endpoints do not emit `400` (body problems are `422`),
-    and the application itself never answers `429` — rate limiting may return a
-    429 at the edge before a request reaches it; retry with backoff.
-    Exceptions: the x402 endpoints return `400` for malformed wire payloads,
-    and the dashboard CSV export endpoint (session-authenticated, not the
-    public API) returns `429`/`413`/`400` responses — see
-    [Reconciliation](../payments/reconciliation.md).
+    but they do emit `413 payload_too_large` and `429 rate_limited` themselves -
+    these are not reserved for an edge proxy. The x402 endpoints additionally
+    return `400` for malformed wire payloads and `503 service_busy` when the
+    verify/settle concurrency limit is hit. The dashboard CSV export endpoint
+    (session-authenticated, not the public API) returns `429`/`413`/`400`
+    responses - see [Reconciliation](../payments/reconciliation.md).
 
 ## Validation errors in detail
 

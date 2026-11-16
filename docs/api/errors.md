@@ -37,18 +37,22 @@ dashboard, and x402.
 | Status | Codes |
 | --- | --- |
 | `400` | `invalid_x402_version`, `invalid_payload` - malformed x402 wire payloads (x402 endpoints only). |
-| `403` | `account_not_found`, `account_not_safe`, `domain_mismatch`, `account_error` |
+| `403` | `account_not_found`, `account_not_safe`, `domain_mismatch`, `account_id_mismatch`, `account_error` |
 | `404` | `payment_not_found`, `http_error` (unknown path) |
+| `413` | `payload_too_large` - request body above 1 MiB, on any method. |
 | `422` | `validation_error`, `split_owner_not_recipient`, `split_sandbox_unsupported` |
+| `429` | `rate_limited` - per-IP limit hit; honour `Retry-After`. |
 | `500` | `payment_creation_failed`, `payment_error`, `split_payment_error`, `database_error`, `domain_error`, `internal_error` |
-| `503` | `split_payment_unavailable` |
+| `503` | `split_payment_unavailable`, `service_busy` |
 
 !!! note "No `400` from the payment endpoints"
 
     Payment and account endpoints never answer `400` (body/schema problems are
-    `422`). The application itself does not return `429`; a `429` may be
-    produced by the rate-limiting layer before the request reaches it. The x402
-    endpoints do return `400` for malformed wire payloads.
+    `422`). They do answer `429 rate_limited` and `413 payload_too_large`
+    themselves - rate limits are in-app and per IP, not only at the edge (see
+    [Errors](../errors/index.md#429-rate-limited)). The x402 endpoints
+    additionally return `400` for malformed wire payloads and
+    `503 service_busy` when too many `verify`/`settle` calls run at once.
 
 ## Client rules
 

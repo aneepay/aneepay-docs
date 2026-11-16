@@ -53,9 +53,9 @@ errors) or the payment `operation_id` to [support](#support).
 | Symptom | Likely cause | Fix |
 | ------- | ------------ | ----- |
 | Account marked "unsafe" | Domain reputation review (`is_safe: false`) | Wait for review or contact support; use `?sandbox=yes` meanwhile. |
-| Lost `webhook_secret` | Shown only once at creation | There is no rotation endpoint: create a new account and migrate — or ask support ([Account setup](getting-started/account-setup.md)). |
+| Lost `webhook_secret` | You did not copy it, or it was rotated for you | It stays visible on the account card in the dashboard — copy it again. Rotation is an operator action (no self-service endpoint); ask support if you suspect a leak ([Account setup](getting-started/account-setup.md)). |
 | Cannot log in | Magic link expired (10 min) | Request a new link; check spam. |
-| 429 from the edge | Rate limiting before the API | Retry with exponential backoff; reduce request rate. |
+| `429` rate limited | Per-IP limits enforced by the application: payment read 600/min, `/x402/verify` 120/min, payment status 120/min, CSV export 60/min | Honour `Retry-After` and back off; see [Errors — 429](errors/index.md#429-rate-limited). |
 
 ## Support
 
