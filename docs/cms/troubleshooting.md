@@ -48,6 +48,15 @@ specific to the plugins.
 | Webhooks arrive but nothing changes         | Status not in the whitelist, or status already applied                                          | Only `pending`/`success`/`failed`/`cancelled` are accepted; duplicates are ignored by design |
 | No webhook at all for a test payment        | Sandbox still useful — but `status_url` must still be set                                       | Set `status_url`; sandbox webhooks are delivered with `is_sandbox: true`                     |
 
+!!! note "`failed` and `cancelled` are not sent by the platform"
+
+    A payment created through the API only ever moves `pending → success`, and
+    only that transition produces a webhook. `failed` and `cancelled` exist in
+    the status enum for records an operator changes manually in the AneePay
+    admin — see [Statuses](../reference/statuses-and-codes.md). Order mappings
+    for them are harmless, but do not build fulfilment logic that waits for
+    them; treat "no `success` webhook yet" as "not paid".
+
 ## Status sync
 
 | Symptom                                                      | Likely cause                                               | Fix                                                                                                 |

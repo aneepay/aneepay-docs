@@ -121,6 +121,9 @@ Notes:
   `_aneepay_payment_id` and `_aneepay_operation_id` link the order to the API
   record.
 - Applying the same status twice is a no-op, so redelivered webhooks are harmless.
+- `failed` and `cancelled` never arrive from the platform on their own: a payment
+  only moves `pending → success` once the on-chain event confirms. Both mappings
+  are there for records an operator changes manually in the AneePay admin.
 - Unknown statuses are ignored.
 
 ## Webhook

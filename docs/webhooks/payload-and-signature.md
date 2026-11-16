@@ -58,8 +58,10 @@ Notes:
 
 - Sign exactly the bytes you receive — do not re-serialize parsed JSON before hashing.
 - Compare in constant time (`hmac.compare_digest` / `crypto.timingSafeEqual`).
-- `webhook_secret` is generated per account and shown **once** at creation
-  (see [Account setup](../getting-started/account-setup.md)).
+- `webhook_secret` is generated per account and stays visible on the account
+  card in the dashboard, so you can always copy it again
+  (see [Account setup](../getting-started/account-setup.md)). Rotating it is an
+  operator action — there is no self-service rotation.
 
 ### Verify — Python
 

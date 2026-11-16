@@ -108,6 +108,9 @@ order and payment.
 
 Notes:
 
+- `failed` and `cancelled` never arrive from the platform on their own: a payment
+  only moves `pending → success` once the on-chain event confirms. Both mappings
+  are there for records an operator changes manually in the AneePay admin.
 - The payment status is always recorded on the order, even if a status mapping
   is left at "no state".
 - Applying the same status twice is a no-op; unknown statuses are ignored.
