@@ -22,7 +22,7 @@ curl -o openapi.json https://api.aneepay.com/openapi.json
 
 The document declares `info.title = "AneePay API"`, `info.version = "1.0.0"`,
 the `Payment` and `x402` tags, and the `AccountId` security scheme
-(`X-Account-Id` header) on the four operations that require it.
+(`X-Account-Id` header) on the five operations that require it.
 
 ## Generating a client
 

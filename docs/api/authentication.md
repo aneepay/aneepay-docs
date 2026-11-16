@@ -20,7 +20,7 @@ header.
 | `GET /x402/merchant` | **Required** |
 | `POST /x402/settle` | **Required** |
 | `GET /payments/{payment_id}` | Not read - the payment UUID is the capability |
-| `GET /accounts/{account_id}/payments` | Not read - the account UUID in the path is the capability |
+| `GET /accounts/{account_id}/payments` | **Required** - and it must equal the `account_id` in the path, otherwise `403 account_id_mismatch` |
 | `GET /x402/supported` | Not read |
 | `POST /x402/verify` | Not read |
 
@@ -29,10 +29,11 @@ before any business logic runs.
 
 !!! note "Treat read URLs as secrets too"
 
-    Because the read endpoints address data by UUID alone, anyone who knows an
-    account UUID can list its payments, and anyone who knows a payment UUID can
-    read that payment. Keep these URLs server-side, out of logs and referrers,
-    just like the header value itself.
+    `GET /payments/{payment_id}` addresses the payment by UUID alone, so anyone
+    who knows a payment UUID can read that payment. Keep payment URLs
+    server-side, out of logs and referrers, just like the header value itself.
+    Listing an account's payments still requires the matching `X-Account-Id`
+    header, so an account UUID on its own does not expose the list.
 
 ## Header validation
 
@@ -91,8 +92,11 @@ Every account carries a domain-reputation flag:
 
 `POST /payments/?sandbox=yes` bypasses the `is_safe` check and forces test
 values (network `amoy`, token `usdc`, `is_sandbox: true` in the payload) -
-see [Sandbox](../sandbox.md). Sandbox mode is not supported for split payments
-(`422 split_sandbox_unsupported`).
+see [Sandbox](../sandbox.md). The same applies to
+`POST /payments/split/?sandbox=yes`: sandbox splits are supported and use the
+Amoy split contract, so they return a payable `checkout_url` like any other
+split. `422 split_sandbox_unsupported` appears only on a deployment where that
+Amoy split contract is not configured.
 
 ## Correlation: `X-Request-ID`
 

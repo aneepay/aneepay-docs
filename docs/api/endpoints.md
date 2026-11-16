@@ -11,11 +11,21 @@ All paths below are relative to the base URL `https://api.aneepay.com`
 | POST | `/payments/` | Yes | Create a payment, get a hosted `checkout_url` | [Create a payment](../payments/create-payment.md) |
 | POST | `/payments/split/` | Yes | Create a split payment (1-100 recipients) | [Split payments](../payments/split-payments.md) |
 | GET | `/payments/{payment_id}` | No | Read one payment by UUID | [Status and polling](../payments/status-and-polling.md) |
-| GET | `/accounts/{account_id}/payments` | No | Paginated list of an account's payments with filters | [Reconciliation](../payments/reconciliation.md) |
+| GET | `/accounts/{account_id}/payments` | Yes | Paginated list of an account's payments with filters | [Reconciliation](../payments/reconciliation.md) |
 
-Creation returns `200` with `{id, operation_id, status, checkout_url}`. Reads
-are public by design: the UUID in the path is the capability
-([Authentication](authentication.md)).
+Creation returns `200` with `{id, operation_id, status, checkout_url}`.
+`GET /payments/{payment_id}` is public by design: the payment UUID is the
+capability. Listing an account's payments also requires `X-Account-Id`, and its
+value must equal the `account_id` in the path - otherwise the request fails with
+`403 account_id_mismatch` ([Authentication](authentication.md)).
+
+!!! note "Trailing slashes matter"
+
+    The collection endpoints end with a slash: `POST /payments/` and
+    `POST /payments/split/`. Calling `POST /payments` without it redirects
+    (`307`) to the canonical path, so keep the slash and avoid depending on the
+    redirect. `GET /payments/` answers `405`, and `GET /payments/split` is read
+    as a payment id, which fails with `422 validation_error`.
 
 ## x402 facilitator API
 
