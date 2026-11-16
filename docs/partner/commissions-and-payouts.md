@@ -85,7 +85,7 @@ Nothing to withdraw yet. Commissions become available 7 days after the payment i
 | -----------------   | --------------------------------------------------------------    |
 | Minimum amount      | None — a withdrawal sweeps the whole available balance            |
 | Fixed interval      | None — you decide when to withdraw                                |
-| Network             | Polygon                                                           |
+| Network             | Polygon mainnet — a DAI transfer                                  |
 | Token               | DAI                                                               |
 | Gas                 | Covered by AneePay                                                |
 | Source of funds     | An AneePay payout wallet                                          |
