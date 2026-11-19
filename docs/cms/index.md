@@ -15,9 +15,9 @@ updates the order status — no blockchain code in your store.
 
 | Platform                | Package                              | Guide                                  |
 | ----------------------- | ------------------------------------ | -------------------------------------- |
-| WooCommerce (WordPress) | `aneepay.zip`                        | [WooCommerce](woocommerce.md)          |
-| OpenCart 3.x            | `aneepay-<version>.ocmod.zip`        | [OpenCart](opencart.md)                |
-| PrestaShop 1.7 / 8      | `ps_aneepay.zip`                     | [PrestaShop](prestashop.md)            |
+| WooCommerce (WordPress) | `woocommerce-aneepay-<version>.zip` | [WooCommerce](woocommerce.md)          |
+| OpenCart 3.x            | `opencart-aneepay-<version>.ocmod.zip` | [OpenCart](opencart.md)             |
+| PrestaShop 1.7 / 8      | `prestashop-aneepay-<version>.zip`  | [PrestaShop](prestashop.md)            |
 
 !!! note "Only these three platforms are supported"
 

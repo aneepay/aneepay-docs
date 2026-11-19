@@ -27,7 +27,7 @@ and the new order tables.
 
 ## Installation
 
-1. Download `aneepay.zip` from the plugin releases.
+1. Download `woocommerce-aneepay-<version>.zip` from the plugin releases.
 2. In WordPress admin: **Plugins → Add New Plugin → Upload Plugin** → select the
    zip → **Install Now** → **Activate**.
 3. WooCommerce must already be installed and active. If it is not, the plugin shows

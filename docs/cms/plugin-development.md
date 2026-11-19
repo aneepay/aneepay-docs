@@ -72,9 +72,9 @@ account:
 
 | Platform      | Artifact                               | Package layout                                                                                                                   |
 | ------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| WooCommerce   | `aneepay.zip`                          | Zip whose root folder is `aneepay/` containing `aneepay.php` (plugin header with `Version:`)                                     |
-| OpenCart 3.x  | `aneepay-<version>.ocmod.zip`          | `upload/` (`admin/`, `catalog/`, `system/`) + `install.xml` manifest; no core file modifications                                 |
-| PrestaShop    | `ps_aneepay.zip`                       | Root folder `ps_aneepay/`, `config.xml` manifest, `logo.png`, and an `index.php` in **every** directory (PrestaShop requirement) |
+| WooCommerce   | `woocommerce-aneepay-<version>.zip`   | Zip whose root folder is `aneepay/` containing `aneepay.php` (plugin header with `Version:`)                                     |
+| OpenCart 3.x  | `opencart-aneepay-<version>.ocmod.zip` | `upload/` (`admin/`, `catalog/`, `system/`) + `install.xml` manifest; no core file modifications                                 |
+| PrestaShop    | `prestashop-aneepay-<version>.zip`    | Root folder `ps_aneepay/`, `config.xml` manifest, `logo.png`, and an `index.php` in **every** directory (PrestaShop requirement) |
 
 Validate before shipping: `php -l` on every file, the platform's structural
 checks (manifest present, required headers/files), and a clean install on a fresh

@@ -26,7 +26,7 @@ OpenCart 3 store already uses for its payment gateways.
 
 ## Installation
 
-1. Download `aneepay-<version>.ocmod.zip` from the plugin releases.
+1. Download `opencart-aneepay-<version>.ocmod.zip` from the plugin releases.
 2. In the store admin: **Extensions → Installer → Upload** the zip. The package
    adds only new files (declared in `install.xml`); it modifies **no** OpenCart
    core files.

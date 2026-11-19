@@ -25,7 +25,7 @@ The module ships English translations only.
 
 ## Installation
 
-1. Download `ps_aneepay.zip` from the release page.
+1. Download `prestashop-aneepay-<version>.zip` from the release page.
 2. In the back office open **Modules → Module manager** and click
    **Upload a module**.
 3. Drop the archive in, or pick it from disk. PrestaShop installs and enables
