@@ -5,6 +5,12 @@ whole payment lifecycle for you: it creates the payment on the store server,
 redirects the customer to hosted checkout, verifies the webhook signature, and
 updates the order status — no blockchain code in your store.
 
+!!! warning "Beta"
+
+    The plugins are in beta: the payment flow works end to end, but the admin
+    tooling and this documentation are still settling. Read
+    [Beta limitations](limitations-beta.md) before taking live payments.
+
 ## Supported platforms
 
 | Platform                | Package                              | Guide                                  |
@@ -75,8 +81,8 @@ All three plugins expose the same core settings:
 | Token / network      | `usdt`, `usdc`, or `dai` on `polygon` (live) or `amoy` (test).                           |
 | Test (sandbox) mode  | Sends `?sandbox=yes`: Amoy network, USDC, `is_safe` bypass.                              |
 | Exchange rate source | Auto rate (Frankfurter/ECB) with a manual fallback, or a manual rate only.               |
-| Order status mapping | Which store status means pending, paid, failed, cancelled.                               |
-| Status sync          | How often pending orders are polled when a webhook is missed.                            |
+| Order status mapping | Which store status means pending, paid, failed, cancelled — OpenCart and PrestaShop only. WooCommerce uses its own statuses and has no mapping to configure. |
+| Status sync          | How pending orders are polled when a webhook is missed: WP-Cron in WooCommerce, the cron URL below in OpenCart and PrestaShop. |
 
 Platform-specific details and defaults:
 
@@ -111,6 +117,7 @@ real signed webhooks. See [Sandbox](../sandbox.md).
 - [WooCommerce](woocommerce.md) — install, settings, checkout, order statuses.
 - [OpenCart 3.x](opencart.md) — extension install, status mapping, cron.
 - [PrestaShop 1.7 / 8](prestashop.md) — module install, order states, cron.
+- [Beta limitations](limitations-beta.md) — what the plugins deliberately do not do.
 - [Custom integration](custom-integration.md) — the same recipe for any other site.
 - [Plugin development](plugin-development.md) — security, packaging, versioning.
 - [Troubleshooting](troubleshooting.md) — plugin-specific symptom → fix tables.

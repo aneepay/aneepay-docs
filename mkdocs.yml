@@ -86,6 +86,7 @@ nav:
       - WooCommerce: cms/woocommerce.md
       - OpenCart 3.x: cms/opencart.md
       - PrestaShop 1.7 / 8: cms/prestashop.md
+      - Beta limitations: cms/limitations-beta.md
       - Custom integration: cms/custom-integration.md
       - Plugin development: cms/plugin-development.md
       - Troubleshooting: cms/troubleshooting.md

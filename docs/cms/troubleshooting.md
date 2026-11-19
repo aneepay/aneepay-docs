@@ -5,6 +5,11 @@ Symptom → cause → fix for the three official plugins. Platform-agnostic prob
 [Troubleshooting](../troubleshooting.md) page; this page only lists what is
 specific to the plugins.
 
+!!! warning "Beta"
+
+    The plugins are in beta. Check [Beta limitations](limitations-beta.md) for
+    the known gaps before filing a bug.
+
 ## Installation and settings
 
 | Symptom                                            | Likely cause                                                                                                    | Fix                                                                                                                          |
@@ -26,14 +31,14 @@ specific to the plugins.
 | Two payments for one order                                       | — (should not happen)                                          | The plugins reuse a pending payment for the same order; if you see duplicates, note both payment IDs and contact support with `operation_id`s    |
 | Token amount differs from the order total                        | Shop currency is not USD; rate source; deliberate round-up     | Expected: shop total → USD → token, rounded **up** to 2 decimals; check the conversion breakdown on the payment card and the rate source setting |
 | Sandbox payment charged in USDC although USDT is configured      | Sandbox forces USDC                                            | Expected behavior; disable Test mode for live payments ([Sandbox](../sandbox.md))                                                                |
-| Customer's redirect lands on the result page with no order shown | Signed cookie expired or another browser/session               | Harmless: the page re-syncs status; the order itself is confirmed server-side                                                                    |
+| Customer's redirect lands on the result page with no order shown | The signed cookie that carries the order is missing (another browser, cleared cookies, or more than 24 hours later) | The page has no order to look up, so it shows the pending state without order details; the order itself is still updated by the webhook or the cron job. Find it in the admin by the payment ID |
 
 ## Order statuses
 
 | Symptom                                                        | Likely cause                                                                                                         | Fix                                                                                                                                       |
 | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | Order stays `pending` although the payment succeeded           | Webhook never arrived (`status_url` not set in the account panel, wrong URL, or store unreachable from the internet) | Set `status_url` from the plugin settings page; meanwhile the sync/cron fallback confirms the order ([Webhooks](../webhooks/overview.md)) |
-| OpenCart: `failed` / `cancelled` never change the order status | Status mapping defaults to "no status" (only pending/paid have defaults)                                             | Map all four statuses on the extension settings page                                                                                      |
+| OpenCart: `failed` / `cancelled` never change the order status | The status was saved as empty, or all four statuses point to the same one                                                  | Defaults are pending 1 / paid 2 / failed 10 / cancelled 7; saving an empty or duplicated status is rejected, so re-save the mapping page |
 | Order was downgraded after being paid                          | — (should not happen)                                                                                                | `success` is terminal in all plugins; a downgrade indicates a manual status change — restore it and report with the payment ID            |
 | Stock not released after a failed payment                      | Order never entered a stock-reserving status, or restoration already ran                                             | A one-time marker on the order prevents a double restock; release manually if the order was created outside the plugin flow               |
 | Order note/history missing the operation ID                    | Payload had no `operation_id`                                                                                        | Use the payment ID stored on the order / in the mapping table for support                                                                 |
@@ -43,7 +48,7 @@ specific to the plugins.
 | Symptom                                     | Likely cause                                                                                    | Fix                                                                                          |
 | ------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | Webhook receiver answers `401`              | Webhook Secret in the plugin differs from the account's secret (or is empty)                    | Copy the secret from the AneePay panel into the plugin; the plugins verify **fail-closed**   |
-| Webhook rejected with `400 stale_timestamp` | Store server clock skewed by more than 24 hours                                                 | Fix NTP/time sync on the store server                                                        |
+| Webhook rejected with `400`                  | Body is not JSON, `status` is outside the whitelist, or `version`/`event_id` came with a `timestamp` that is missing, non-numeric or negative | The signature is the only authorisation — `timestamp` is informational; check the body the sender posted |
 | Webhook returns `404`                       | No order matches the payload (payment created by another integration, or mapping table missing) | Check the stored mapping (order metadata) and the payment ID                                 |
 | Webhooks arrive but nothing changes         | Status not in the whitelist, or status already applied                                          | Only `pending`/`success`/`failed`/`cancelled` are accepted; duplicates are ignored by design |
 | No webhook at all for a test payment        | Sandbox still useful — but `status_url` must still be set                                       | Set `status_url`; sandbox webhooks are delivered with `is_sandbox: true`                     |
@@ -63,8 +68,8 @@ specific to the plugins.
 | ------------------------------------------------------------ | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | WooCommerce orders confirm only when someone visits the shop | WP-Cron runs on traffic                                    | Schedule a server-side cron against `wp-cron.php`, or shorten the Status Sync Interval              |
 | OpenCart/PrestaShop cron returns `403`                       | Missing or wrong `secret` query parameter                  | Use the exact cron URL from the settings page (the secret is generated once and shown there)        |
-| Cron URL never runs                                          | Not added to the server crontab                            | Add it: `*/5 * * * * curl -s '<cron-url>' >/dev/null` at the configured interval                    |
-| "I already paid" button says forbidden                       | Order opened in another browser/session, or cookie expired | Retry from the session that started the payment; the check endpoint only accepts the owning session |
+| Cron URL never runs                                          | Not added to the server crontab                            | Add it: `*/5 * * * * curl -s '<cron-url>' >/dev/null` — OpenCart and PrestaShop have no scheduler, so the crontab decides the interval |
+| "I already paid" button says forbidden                       | Order opened in another browser/session, or the 24-hour cookie is gone | Retry from the session that started the payment; the check endpoint only accepts the owning session |
 | Status check seems stuck                                     | Endpoint rate-limits repeat checks (a few seconds)         | Expected; wait a moment or let the cron/webhook catch up                                            |
 
 ## Logs and diagnostics

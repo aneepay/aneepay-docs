@@ -5,6 +5,13 @@ The **AneePay Crypto Gateway for WooCommerce** plugin accepts stablecoin payment
 webhook. This page covers installation, settings, checkout behavior, order
 statuses, and test mode.
 
+!!! warning "Beta"
+
+    The CMS plugins are in beta. The payment flow is complete and tested against
+    the three stands in the repository, but the admin tooling and this
+    documentation are still settling. Read
+    [Beta limitations](limitations-beta.md) before taking live payments.
+
 ## Requirements
 
 | Component       | Minimum             | Notes                                                    |
@@ -32,20 +39,21 @@ and the new order tables.
 
 Settings live at **WooCommerce → Settings → Payments → AneePay Crypto**.
 
-| Field                | Required | Purpose                                                                                 |
-| -------------------- | -------- | --------------------------------------------------------------------------------------- |
-| Enable/Disable       | yes      | Master switch for the payment method.                                                   |
-| Title / Description  | no       | What the customer sees on the payment method card.                                      |
-| Account ID           | yes      | Account UUID; must be a valid UUID or settings are rejected.                            |
-| Webhook Secret       | yes      | Signs `X-AneePay-Signature`. Leaving the field blank on re-save keeps the stored value. |
-| Domain               | no       | Host sent as `Origin`; empty means "use the site host".                                 |
-| Test/Sandbox Mode    | no       | Adds `?sandbox=yes` to API calls (Amoy + USDC, `is_safe` bypass).                       |
-| Cryptocurrency       | no       | `usdt` (default), `usdc`, `dai`. Ignored in sandbox (always USDC).                      |
-| Blockchain           | no       | `polygon` (default) or `amoy`. Amoy is forced in sandbox.                               |
-| Exchange Rate Source | no       | **Auto** (Frankfurter/ECB with manual fallback) or **manual rate only**.                |
-| Manual Exchange Rate | no       | Store-currency units per 1 token (≈ 1 USD); must be positive.                           |
-| Debug Log            | no       | Logs API calls to **WooCommerce → Status → Logs** (source `aneepay`).                   |
-| Status Sync Interval | no       | WP-Cron polling of pending orders: every 5 (default) / 10 / 15 / 30 minutes.            |
+| Field                          | Required | Purpose                                                                                                       |
+| ------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------- |
+| Enable/Disable                 | yes      | Master switch for the payment method.                                                                         |
+| Title / Description            | no       | What the customer sees on the payment method card.                                                            |
+| Account ID                     | yes      | Account UUID; must be a valid UUID or settings are rejected.                                                  |
+| Webhook Secret                 | yes      | Signs `X-AneePay-Signature`. Leaving the field blank on re-save keeps the stored value.                       |
+| Domain                         | no       | Host sent as `Origin`; empty means "use the site host".                                                      |
+| Test/Sandbox Mode              | no       | Adds `?sandbox=yes` to API calls (Amoy + USDC, `is_safe` bypass). Off by default.                             |
+| Cryptocurrency                 | no       | `usdt` (default), `usdc`, `dai`. Ignored in sandbox (always USDC).                                            |
+| Blockchain                     | no       | `polygon` (default) or `amoy`. Amoy is forced in sandbox.                                                     |
+| Exchange Rate Source           | no       | **Auto** (Frankfurter/ECB with manual fallback) or **manual rate only**.                                      |
+| Manual Exchange Rate           | no       | Store-currency units per 1 token (≈ 1 USD); must be positive.                                                 |
+| Debug Log                      | no       | Logs API calls to **WooCommerce → Status → Logs** (source `aneepay`). Errors are always logged; entries are kept for 14 days. |
+| Status Sync Interval           | no       | WP-Cron polling of pending orders: every 5 (default) / 10 / 15 / 30 minutes.                                  |
+| Abandoned Payment Expiry       | no       | Minutes after which an unpaid order is failed and its stock released. Default 120; set **0** to disable.      |
 
 The settings page also provides:
 
@@ -55,7 +63,15 @@ The settings page also provides:
   `GET /accounts/{account_id}/payments`, which validates the account, the `Origin`
   domain, and `is_safe` without creating a payment;
 - an **example conversion** preview for the current rate settings;
-- a **Request log** panel with the last 50 API calls (never contains secrets).
+- a **Request log** panel with the last 50 API calls (never contains secrets);
+- a **Sync a payment** panel — enter an AneePay payment ID (and optionally the
+  order number) to fetch that payment and apply its status right away. This is the
+  manual fix for "the buyer paid but the order is still pending", because the
+  platform sends a webhook once and never replays it;
+- a **Reconcile payments** panel — compares the store with the payments AneePay
+  recorded in the last 1–30 days (default 7) and applies the status of every
+  payment it can match to an order. It reports how many payments it checked,
+  matched, updated, and could not match. Use it when a webhook was lost for good.
 
 !!! warning "A webhook secret is mandatory"
 
@@ -81,24 +97,49 @@ WP-Cron handles status polling automatically — there is no cron URL to schedul
 1. The customer selects **Pay with Crypto (USDT/USDC/DAI)** and places the order.
 2. The plugin converts the order total (store currency → USD → token, rounded
    **up** to 2 decimals) and shows a breakdown on the payment method card:
-   "You will pay X TOKEN".
+   "You will pay X TOKEN". The breakdown is an estimate; the amount actually
+   charged is fixed when the payment is created.
 3. The plugin calls `POST /payments/` **from the store server** with
    `X-Account-Id`, `Origin`, and `description: "Order #<number>"`, then redirects
    the customer to `checkout_url`.
 4. The order is set to **pending** with a note containing the AneePay payment ID,
    and product stock is reduced.
-5. While payment is pending, the thank-you and order-pay pages poll the status
-   automatically (a "Checking…" indicator), and the page re-syncs from the API
-   before rendering the result.
+5. The order-received page polls the status while the customer waits.
 
 **Idempotency:** if an order already has a pending AneePay payment, a reload or
 double click reuses the existing `checkout_url` instead of creating a second
-payment.
+payment. A mapping row in the `creating` state locks the order while the payment
+is being created, so two tabs cannot start two payments. If the API answer is lost
+(timeout, unreadable body), the plugin looks the payment up in the account list by
+amount and order reference instead of retrying blind.
 
-**Result pages:** `/?aneepay=success` and `/?aneepay=fail` identify the order from
-a signed, one-hour cookie set at checkout; an invalid or expired cookie shows the
-page without order details. The page pulls the current status from the API, so a
-webhook that arrived during the redirect is reflected correctly.
+### Result pages
+
+`/?aneepay=success` and `/?aneepay=fail` identify the order from a signed cookie
+set at checkout. The cookie lives **24 hours** and is renewed on every visit (at
+most once a minute), so a buyer who pays from an exchange or a wallet app and comes
+back much later still sees the right page.
+
+Before rendering, the page fetches the payment from the API — a failed payment is
+only ever visible through the API, because a webhook is sent on `success` alone.
+The page therefore shows one of three states:
+
+- **paid** — the payment succeeded (a webhook that arrived during the redirect is
+  reflected too);
+- **failed** — the payment failed or was cancelled, with a **Try again** link back
+  to checkout and no "I already paid" button, so a buyer who actually paid is never
+  sent to pay twice;
+- **pending** — still waiting for the on-chain transaction.
+
+While the state is pending the page polls the status: after 5 seconds, then after
+15, then every 30 seconds, for at most 30 minutes. When that budget is spent the
+polling stops and an explicit **Check again** button appears; pressing it also
+resets the budget. Polling only adds convenience: the server resolves the status on
+every page load, so reloading the page always gives the current state, with or
+without JavaScript.
+
+The status endpoint (`action=aneepay_check_status`) requires the WooCommerce order
+key or the owning customer, so another visitor cannot poll or advance an order.
 
 !!! note "Block-based checkout"
 
@@ -108,12 +149,12 @@ webhook that arrived during the redirect is reflected correctly.
 
 ## Order statuses
 
-| Payment status | WooCommerce effect                                                                         |
-| -------------- | ------------------------------------------------------------------------------------------ |
-| `pending`      | Order stays **pending**; note: "Awaiting crypto payment…"                                  |
-| `success`      | `payment_complete()` — order moves to processing/completed; **terminal, never downgraded** |
-| `failed`       | Order → **failed**; reserved stock is restored exactly once                                |
-| `cancelled`    | Order → **cancelled**; reserved stock is restored exactly once                             |
+| Payment status | WooCommerce effect                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------- |
+| `pending`      | Order stays **pending**; note: "Awaiting crypto payment…"                                   |
+| `success`      | `payment_complete()` — order moves to processing/completed; **terminal, never downgraded**   |
+| `failed`       | Order → **failed**; reserved stock is restored exactly once                                  |
+| `cancelled`    | Order → **cancelled**; reserved stock is restored exactly once                               |
 
 Notes:
 
@@ -121,10 +162,15 @@ Notes:
   `_aneepay_payment_id` and `_aneepay_operation_id` link the order to the API
   record.
 - Applying the same status twice is a no-op, so redelivered webhooks are harmless.
+- `success` is final: a later `pending` or `failed` for the same payment does not
+  downgrade a paid order.
 - `failed` and `cancelled` never arrive from the platform on their own: a payment
   only moves `pending → success` once the on-chain event confirms. Both mappings
-  are there for records an operator changes manually in the AneePay admin.
+  are there for records an operator changes manually in the AneePay admin and for
+  the abandoned-payment expiry below.
 - Unknown statuses are ignored.
+- Every change writes an order note (`AneePay: payment confirmed.`, `… failed.`,
+  `… cancelled by the customer.`) so the history explains what happened.
 
 ## Webhook
 
@@ -139,28 +185,44 @@ Processing:
 1. **Signature is verified first** (fail-closed): `X-AneePay-Signature` must be
    the HMAC-SHA256 of the raw body keyed with `Webhook Secret`. Missing secret,
    missing header, or mismatch → **401**, nothing is processed.
-2. `operation_id` is decoded as a 128-bit integer string (never as a float).
-3. The `timestamp` must be fresher than 24 hours (replay guard), otherwise
-   **400**.
-4. The order is resolved in this order: `order_id` → `payment_id` →
+2. The event is deduplicated by `event_id` (or by a hash of the body for legacy
+   payloads) in the `{prefix}aneepay_event` table. A retry of an event that was
+   already applied gets **200 `{ "success": true, "duplicate": true }`** and
+   changes nothing. Rows are pruned after 7 days.
+3. `operation_id` is decoded as a 128-bit integer string (never as a float).
+4. `timestamp` is informational: when `version` and `event_id` are present it must
+   be there, numeric, and not negative, otherwise **400**. Authorisation is the
+   signature alone; there is no freshness window, and replays are stopped by the
+   deduplication above.
+5. The order is resolved in this order: `order_id` → `payment_id` →
    `operation_id` → `operation_id` decoded back to the payment UUID →
    `description: "Order #N"`. Only orders paid with this gateway qualify.
-5. The status is applied idempotently; a matching `200 { "success": true }` is
-   returned.
+6. A sandbox payment never completes a live order: when the payload says
+   `is_sandbox: true` (or `network: amoy`) and the order was created live, the
+   delivery is acknowledged but not applied.
+7. The status is applied idempotently; a matching `200 { "success": true }` is
+   returned. Unknown statuses, non-JSON bodies and unresolvable orders are
+   rejected with **400**/**404** and nothing is written.
 
 The full contract (payload v1, retries, idempotency) is documented in
 [Webhooks](../webhooks/overview.md) and
-[Payload and signature](../webhooks/payload-and-signature.md).
+[Payload and signature](../webhooks/payload-and-signature.md). The plugin
+repository ships a manual webhook smoke checklist (`docs/WEBHOOK-SMOKE.md`) that
+covers the signature, a replay with the same `event_id`, an unknown status and the
+sandbox gate.
 
 ## Status sync (webhook fallback)
 
 Two independent mechanisms keep orders correct when a webhook is delayed or lost:
 
 - **WP-Cron** (`aneepay_sync_pending_orders`) polls `GET /payments/{id}` for up to
-  20 `pending`/`on-hold` orders at the configured interval, with a no-overlap lock.
-- **Front-end polling** on the thank-you / order-pay page checks the status when
-  the customer is still on the site. The endpoint requires the order key (or the
-  owning customer), so another visitor cannot poll or advance your order.
+  50 `pending`/`on-hold` orders created in the last 7 days, at the configured
+  interval, with a 5-minute no-overlap lock. An order older than **Abandoned
+  Payment Expiry** is marked **failed** and its stock released — but only once the
+  API confirms the payment did not go through; a timeout, a 5xx or a 429 is
+  treated as "unknown" and the order is left alone for the next run.
+- **Front-end polling** on the order-received page checks the status while the
+  customer is still on the site (see [Result pages](#result-pages)).
 
 !!! warning "WP-Cron runs on traffic"
 
@@ -181,10 +243,10 @@ the mode is on. Turn it off for live payments. See [Sandbox](../sandbox.md).
 
 ## Logs
 
-| Log                    | Where                                             | Content                                                           |
-| ---------------------- | ------------------------------------------------- | ----------------------------------------------------------------- |
-| Debug log              | WooCommerce → Status → Logs, source `aneepay`     | API requests/responses (opt-in)                                   |
-| Request log (settings) | "Request log" button on the gateway settings page | Last 50 calls: time, method, endpoint, code, latency — no secrets |
+| Log                    | Where                                             | Content                                                                                |
+| ---------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Debug log              | WooCommerce → Status → Logs, source `aneepay`     | API requests/responses (opt-in; errors always logged; kept 14 days)                     |
+| Request log (settings) | "Request log" button on the gateway settings page | Last 50 calls: time, method, endpoint, code, latency, truncated body — never secrets     |
 
 ## Troubleshooting
 
@@ -193,7 +255,8 @@ the mode is on. Turn it off for live payments. See [Sandbox](../sandbox.md).
 | AneePay missing from checkout                               | Block-based checkout, or gateway disabled   | Use the classic checkout; enable the gateway under Payments                          |
 | Settings will not save                                      | Invalid Account ID or empty secret          | Enter a UUID; the secret field must contain a value at least once                    |
 | Webhooks return `401`                                       | Wrong or missing Webhook Secret             | Copy the secret from the AneePay account panel ([Webhooks](../webhooks/overview.md)) |
-| Order stays pending after payment                           | `status_url` not set, or WP-Cron never runs | Set the account URLs; schedule server-side `wp-cron.php`                             |
+| Order stays pending after payment                           | `status_url` not set, or WP-Cron never runs | Set the account URLs; schedule server-side `wp-cron.php`; or press **Sync a payment** |
+| Order pending after a known payment, no webhook ever arrives | The platform does not replay deliveries     | Press **Reconcile payments** for the last N days                                     |
 | `403 domain_mismatch`                                       | `Origin` host ≠ account `domain`            | Match the Domain setting to the registered domain (including `www`)                  |
 | Gateway shows but payment fails with 403 `account_not_safe` | Domain still under review                   | Wait for review or test with sandbox ([Sandbox](../sandbox.md))                      |
 
