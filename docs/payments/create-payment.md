@@ -22,10 +22,10 @@ Calls are **server-to-server only** — the endpoint identifies you by the
 
 | Field | Type | Required | Rules | Example |
 | --- | --- | --- | --- | --- |
-| `amount` | decimal | **Yes** | `> 0`; rounded to **2 decimal places** (`ROUND_HALF_UP`, e.g. `0.005` → `0.01`). | `19.50` |
+| `amount` | decimal | **Yes** | `> 0`; rounded to **2 decimal places** (`ROUND_HALF_UP`, for example `0.005` → `0.01`). | `19.50` |
 | `token` | string | **Yes** | `usdt` \| `usdc` \| `dai` (case-insensitive). | `usdt` |
 | `network` | string | **Yes** | `polygon` (mainnet) \| `amoy` (testnet); case-insensitive. | `polygon` |
-| `description` | string | No | Max **500** characters. **Public** — shown to the customer and readable via the public status endpoint; use an order number, never personal data. | `Order #12345` |
+| `description` | string | No | Max **500** characters. **Public** — shown to the customer and readable through the public status endpoint; use an order number, never personal data. | `Order #12345` |
 
 Unknown fields return **422** — a typo such as `"amt"` is rejected, not silently
 ignored.
@@ -143,7 +143,7 @@ see [Errors](../errors/index.md).
 1. Save `id` and `operation_id` on your order.
 2. Redirect the customer to `checkout_url`
    ([hosted checkout](checkout-and-dapp.md)).
-3. Track the outcome via [webhooks](../webhooks/overview.md) or
+3. Track the outcome with [webhooks](../webhooks/overview.md) or
    [polling](status-and-polling.md).
 
 Retries: there is **no idempotency key** — every call creates a new payment.

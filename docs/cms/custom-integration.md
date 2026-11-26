@@ -12,7 +12,7 @@ you build only the store-specific glue.
    - `wallet` — your EVM address (the contract sends the net amount there);
    - `domain` — your storefront domain (checked against the `Origin` header);
    - `status_url`, `success_url`, `fail_url` — endpoints/pages **on your site**
-     (you will create them in steps 3–4);
+     (you create them in steps 3–4);
    - `webhook_secret` — shown once; store it in your secret manager.
 3. Make sure `is_safe` is `true`, or test with `?sandbox=yes`
    ([Sandbox](../sandbox.md)).
@@ -45,9 +45,9 @@ reliable link between your order and the payment. Full request/response contract
 [Create a payment](../payments/create-payment.md).
 
 - Amounts are **decimal strings**; standard checkout rounds to 2 decimals.
-- If your shop currency is not USD, convert **shop total → USD → token** first
-  (live ECB rate + fallbacks) and round the token amount **up**, so you never
-  undercharge. Plugins show the breakdown to the customer at checkout.
+- If your shop currency is not USD, convert the shop total to USD, then to the
+  token (live ECB rate + fallbacks) and round the token amount **up**, so you
+  never undercharge. Plugins show the breakdown to the customer at checkout.
 - Send `description: "Order #<number>"` — it makes webhook matching and support
   tickets much easier, and it is **public** data
   ([Security and privacy](../payments/security-and-privacy.md)).

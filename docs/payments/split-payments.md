@@ -24,7 +24,7 @@ Each recipient:
 
 | Field | Type | Rules | Example |
 | --- | --- | --- | --- |
-| `address` | string | `0x` + 40 hex chars, not the zero address; normalized to lowercase; must be unique within the payment. | `0x1111…1111` |
+| `address` | string | `0x` + 40 hex characters, not the zero address; normalized to lowercase; must be unique within the payment. | `0x1111…1111` |
 | `share` | integer | **1..10000** basis points; the sum across all recipients must equal exactly **10000**. | `7000` |
 
 **The account's `wallet` must appear among the recipients with `share > 0`.**

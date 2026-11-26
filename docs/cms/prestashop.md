@@ -48,7 +48,7 @@ The module ships English translations only.
 | Test mode                  | Sandbox on/off. **On by default.** Sandbox forces USDC on Amoy.                                        |
 | Cryptocurrency             | `USDT`, `USDC` or `DAI`.                                                                              |
 | Blockchain                 | `Polygon` for live payments, `Amoy` for test mode.                                                     |
-| Exchange Rate Source       | `Auto` (ECB via Frankfurter) or `Manual`.                                                              |
+| Exchange Rate Source       | `Auto` (ECB from Frankfurter) or `Manual`.                                                              |
 | Manual Exchange Rate       | Used when the source is manual, or as the last fallback. Store currency per 1 USD.                      |
 | Order states               | Which local state each payment status maps to, see [Order statuses](#order-statuses).                   |
 | Abandoned Payment Expiry   | Minutes before a pending order is closed by the cron job. `0` disables expiry. Default `120`.           |
@@ -119,7 +119,7 @@ bare GET therefore cannot create an order, and more than five attempts in ten
 minutes are refused. A mapping row in the `creating` state then locks the order
 while the payment is created, so a second tab or a double click cannot start a
 second AneePay payment. AneePay has no idempotency key, so if the API answer is
-lost the module looks for the payment it just created — by amount and order
+lost the module looks for the payment it created — by amount and order
 reference — instead of retrying blind.
 
 If saving the mapping fails after the payment already exists, the order is not
@@ -285,7 +285,7 @@ Set **Keep data on uninstall** to **Delete** to drop the tables on uninstall.
 | Webhook answered `404`                      | No order matched. The payment belongs to another shop, or the order was already deleted.          |
 | Customer paid, order still pending          | Use **Reconcile payments** for the last day, or **Sync a payment** with the payment ID.            |
 | `failed` counter greater than 0 in cron     | The API answered with an error for those orders. The request log has the status code.             |
-| Settings will not save                      | Account ID must be a UUID, and each order state must be selected.                                  |
+| Settings do not save                      | Account ID must be a UUID, and each order state must be selected.                                  |
 | Redirect lands on a page without an order   | The signed cookie expired or was lost. The page still renders the pending state; reopen the link from the AneePay payment. |
 
 ## Related sections

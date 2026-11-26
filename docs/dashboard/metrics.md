@@ -24,7 +24,7 @@ The response is plain text in the Prometheus exposition format
 
 | Metric                                    | Type    | Meaning                                              |
 | ----------------------------------------- | ------- | ---------------------------------------------------- |
-| `payments_in_progress`                    | Gauge   | Payments currently in `pending` state (live count)   |
+| `payments_in_progress`                    | Gauge   | Payments in `pending` state (live count)   |
 | `payments_successful_total`               | Gauge   | Lifetime number of successful payments               |
 | `payments_failed_total`                   | Gauge   | Lifetime number of failed payments                   |
 | `payments_processing_duration_seconds_count` | Gauge | Number of confirmed payments measured                |
@@ -56,7 +56,7 @@ contribute to the duration histogram.
 - `payments_in_progress` is computed at scrape time from the current
   `pending` payments, so it follows the real state of the account.
 - The counters and histogram data are updated when a payment reaches its final
-  state, which is why they are lifetime figures for the account - they are not
+  state, which is why they are lifetime figures for the account — they are not
   reset by filters or by exports.
 
 ## Scraping
@@ -89,15 +89,15 @@ sum(payments_processing_duration_seconds_count)
 !!! note "Not the same as the payment list"
 
     Metrics are cumulative counters for monitoring and alerting. For
-    period-accurate reporting - "how many payments succeeded this month" -
+    period-accurate reporting — "how many payments succeeded this month" —
     use the [payments list](payments-and-export.md) or the
     [account payments API](../payments/reconciliation.md), which can be
     filtered by date and status.
 
 ## Related sections
 
-- [Accounts](accounts.md) - where the metrics button lives.
-- [Payments and export](payments-and-export.md) - the list behind the
+- [Accounts](accounts.md) — where the metrics button lives.
+- [Payments and export](payments-and-export.md) — the list behind the
   counters.
-- [Reconciliation](../payments/reconciliation.md) - the API equivalent for
+- [Reconciliation](../payments/reconciliation.md) — the API equivalent for
   reporting.

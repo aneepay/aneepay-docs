@@ -16,7 +16,7 @@ All paths below are relative to the base URL `https://api.aneepay.com`
 Creation returns `200` with `{id, operation_id, status, checkout_url}`.
 `GET /payments/{payment_id}` is public by design: the payment UUID is the
 capability. Listing an account's payments also requires `X-Account-Id`, and its
-value must equal the `account_id` in the path - otherwise the request fails with
+value must equal the `account_id` in the path — otherwise the request fails with
 `403 account_id_mismatch` ([Authentication](authentication.md)).
 
 !!! note "Trailing slashes matter"
@@ -37,7 +37,7 @@ value must equal the `account_id` in the path - otherwise the request fails with
 | POST | `/x402/settle` | Yes | Settle an authorization (x402 v2 section 7.2) | [Facilitator API](../x402/facilitator-api.md) |
 
 Protocol-level failures from `verify`/`settle` are `200` responses with
-`isValid: false` or `success: false` and a spec-level error code - they are not
+`isValid: false` or `success: false` and a spec-level error code — they are not
 HTTP errors. Transport errors still use the shared problem+json envelope.
 
 ## Documentation endpoints
@@ -56,12 +56,12 @@ are documented in their own sections:
 | Endpoint | Purpose |
 | --- | --- |
 | `GET /payments/{payment_id}/status/` | Small public status JSON for integrations; rate-limited to 120 requests per minute per IP. |
-| `GET /accounts/{account_id}/metrics/` | Prometheus text metrics for one account - treat the URL as secret ([Metrics](../dashboard/metrics.md)). |
+| `GET /accounts/{account_id}/metrics/` | Prometheus text metrics for one account — treat the URL as secret ([Metrics](../dashboard/metrics.md)). |
 | `GET /dashboard/payments/export/` | CSV export from the dashboard ([Payments and export](../dashboard/payments-and-export.md)). |
 
 ## Related sections
 
-- [Authentication](authentication.md) - which endpoints need `X-Account-Id`.
-- [Errors](errors.md) - shared error contract for every endpoint.
-- [OpenAPI and ReDoc](openapi-and-redoc.md) - schemas and client generation.
-- [Webhooks](../webhooks/overview.md) - outbound status events.
+- [Authentication](authentication.md) — which endpoints need `X-Account-Id`.
+- [Errors](errors.md) — shared error contract for every endpoint.
+- [OpenAPI and ReDoc](openapi-and-redoc.md) — schemas and client generation.
+- [Webhooks](../webhooks/overview.md) — outbound status events.

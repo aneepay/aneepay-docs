@@ -122,6 +122,6 @@ are listed in [Troubleshooting](troubleshooting.md#known-limitations).
   the x402 endpoints live on the same base URL.
 - [CMS integrations](../cms/index.md) — the same AneePay account for
   storefront plugins.
-- [Webhooks](../webhooks/overview.md) — settlement notifications for the
+- [Webhooks](../webhooks/overview.md) — settlement webhooks for the
   resulting payment records.
 - [FAQ](../faq.md) — short answers about x402, fees, and networks.

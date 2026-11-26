@@ -11,10 +11,10 @@ audits, finance exports).
 `GET /accounts/{account_id}/payments` returns payments for one account,
 newest first.
 
-!!! note "Account UUID is the scope - and the header must match it"
+!!! note "Account UUID is the scope — and the header must match it"
     The account UUID in the path identifies whose payments you read, and the
     same UUID must be sent in `X-Account-Id`; a mismatch fails with
-    `403 account_id_mismatch`. That UUID doubles as your API key - treat the
+    `403 account_id_mismatch`. That UUID doubles as your API key — treat the
     whole URL as server-side material and do not expose it to browsers or logs.
 
 ### Query parameters
@@ -32,7 +32,7 @@ newest first.
 
 Sorting is always **descending by `created_at`** (newest first). An unknown
 account UUID that still matches the header returns an empty `items` list with
-`total: 0` - this endpoint checks the header against the path, not that the
+`total: 0` — this endpoint checks the header against the path, not that the
 account exists.
 
 ### Example requests

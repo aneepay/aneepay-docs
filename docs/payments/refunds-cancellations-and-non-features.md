@@ -19,14 +19,14 @@ record or report these manual refunds; track them in your own order system.
 A customer **cannot cancel** a payment:
 
 - There is no cancel endpoint.
-- The hosted checkout has no cancel button — the customer can simply close
+- The hosted checkout has no cancel button — the customer can close
   the tab, which leaves the payment `pending`.
 - No webhook or status change is ever triggered by a customer abandoning a
   payment.
 
 **What this means for you:** a `pending` payment may sit forever. Set your
-own expiry policy — e.g. treat payments still `pending` after N minutes as
-abandoned, and never reserve stock until the payment is `success`.
+own expiry policy — for example, treat payments still `pending` after N minutes
+as abandoned, and never reserve stock until the payment is `success`.
 
 ## No subscriptions or recurring payments
 

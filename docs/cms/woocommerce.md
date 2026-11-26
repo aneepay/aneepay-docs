@@ -253,7 +253,7 @@ the mode is on. Turn it off for live payments. See [Sandbox](../sandbox.md).
 | Symptom                                                     | Likely cause                                | Fix                                                                                  |
 | ----------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------ |
 | AneePay missing from checkout                               | Block-based checkout, or gateway disabled   | Use the classic checkout; enable the gateway under Payments                          |
-| Settings will not save                                      | Invalid Account ID or empty secret          | Enter a UUID; the secret field must contain a value at least once                    |
+| Settings do not save                                      | Invalid Account ID or empty secret          | Enter a UUID; the secret field must contain a value at least once                    |
 | Webhooks return `401`                                       | Wrong or missing Webhook Secret             | Copy the secret from the AneePay account panel ([Webhooks](../webhooks/overview.md)) |
 | Order stays pending after payment                           | `status_url` not set, or WP-Cron never runs | Set the account URLs; schedule server-side `wp-cron.php`; or press **Sync a payment** |
 | Order pending after a known payment, no webhook ever arrives | The platform does not replay deliveries     | Press **Reconcile payments** for the last N days                                     |

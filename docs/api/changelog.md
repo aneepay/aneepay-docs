@@ -18,13 +18,13 @@ whenever the documented surface changes.
 | --- | --- |
 | Added | New endpoints, new request parameters, new response fields. |
 | Changed | Behavioral changes to existing endpoints: validation, defaults, limits, error codes. |
-| Deprecated | Endpoints or fields that remain functional but should no longer be used. |
+| Deprecated | Endpoints or fields that still work but are no longer recommended. |
 | Removed | Endpoints or fields that no longer work. |
 | Security | Changes to authentication, authorization, or signature rules. |
 
 ## How to detect changes yourself
 
-1. Read this page - every published change lands here first.
+1. Read this page — every published change lands here first.
 2. Diff the OpenAPI document against your stored copy:
 
 ```bash title="Terminal"
@@ -46,6 +46,6 @@ See [OpenAPI and ReDoc](openapi-and-redoc.md).
 
 ## Related sections
 
-- [Versioning and deprecation](versioning-and-deprecation.md) - the policy behind this changelog.
-- [OpenAPI and ReDoc](openapi-and-redoc.md) - the machine-readable contract.
-- [Errors](errors.md) - error codes that may appear.
+- [Versioning and deprecation](versioning-and-deprecation.md) — the policy behind this changelog.
+- [OpenAPI and ReDoc](openapi-and-redoc.md) — the machine-readable contract.
+- [Errors](errors.md) — error codes that may appear.

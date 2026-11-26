@@ -4,14 +4,14 @@ The AneePay dashboard is the merchant control panel on the main site. It is
 where you sign in without a password, create and maintain the accounts your
 integration uses, watch payments arrive, and export them for accounting.
 
-The dashboard is not a separate host - it lives on `https://aneepay.com`
+The dashboard is not a separate host — it lives on `https://aneepay.com`
 under a handful of paths, and every page carries the same header: the login
 form when you are signed out, the **Logout** button when you are signed in.
 
 !!! note "Merchant dashboard, not partner dashboard"
 
     This section describes the **merchant** dashboard. The partner program has
-    a separate interface of its own - see
+    a separate interface of its own — see
     [Partner program](../partner/index.md).
 
 ## Signing in
@@ -23,19 +23,19 @@ AneePay uses **passwordless login** based on a magic link:
    Passwordless registration.*
 2. Open the message titled **"Your AneePay login link"** and follow the link.
 
-!!! success "You will see this confirmation"
+!!! success "The confirmation you see"
 
     `Login link sent. Check your email (Valid for 10 min).`
 
 | Property  | Value                                                                       |
 | --------- | --------------------------------------------------------------------------- |
 | Validity  | 10 minutes from the moment it was sent                                      |
-| Reuse     | Single use - opening the same link twice fails                              |
+| Reuse     | Single use — opening the same link twice fails                              |
 | Landing   | Always the accounts list at `/accounts/`, even if you requested it elsewhere |
 | Session   | Lasts up to 2 weeks and ends with **Logout** in the header                  |
 
 - Signing in for the first time with an email address creates the profile for
-  it automatically - there is no separate registration step.
+  it automatically — there is no separate registration step.
 - An expired, already-used, or malformed link opens the **Invalid Token** page
   ("We apologize, but the token used for this link has expired or is
   invalid."). Go back and request a fresh link.
@@ -56,7 +56,7 @@ AneePay uses **passwordless login** based on a magic link:
 | CSV export               | `/dashboard/payments/export/`            |
 | Account metrics          | `/accounts/<account_id>/metrics/`        |
 
-The dashboard itself is a two-tab shell - **Accounts** and **Payments** - plus
+The dashboard itself is a two-tab shell — **Accounts** and **Payments** — plus
 a third tab, **Create Payment Link**, that is shown disabled because the
 feature is not available yet.
 
@@ -78,7 +78,7 @@ feature is not available yet.
 | --------------------------------- | ------------------------------------------------------------------ |
 | Creating payments                 | The API: [`POST /payments/`](../payments/create-payment.md)        |
 | Refunds, cancellations, subscriptions | [Non-features](../payments/refunds-cancellations-and-non-features.md) |
-| Payment links ("Create Payment Link" tab) | Not implemented - the tab is disabled                     |
+| Payment links ("Create Payment Link" tab) | Not implemented — the tab is disabled                     |
 | Rotating the webhook secret or the account UUID | [Account setup](../getting-started/account-setup.md#key-rotation) |
 | Passwords, profiles, team members | One profile per email address; login is the magic link only        |
 | Withdrawals and payouts           | The [partner dashboard](../partner/index.md) only                  |
@@ -93,11 +93,11 @@ feature is not available yet.
 
 ## Related sections
 
-- [Account setup](../getting-started/account-setup.md) - what every account
+- [Account setup](../getting-started/account-setup.md) — what every account
   field means for your integration.
-- [Reconciliation](../payments/reconciliation.md) - the API counterpart of the
+- [Reconciliation](../payments/reconciliation.md) — the API counterpart of the
   payments list and CSV export.
-- [Troubleshooting](../troubleshooting.md) - symptom-to-fix table, including
+- [Troubleshooting](../troubleshooting.md) — symptom-to-fix table, including
   dashboard errors.
-- [Security best practices](../security/best-practices.md) - handling the
+- [Security best practices](../security/best-practices.md) — handling the
   account UUID and webhook secret.

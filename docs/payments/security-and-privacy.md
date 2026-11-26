@@ -42,8 +42,8 @@ practice:
 - Anyone who learns a payment UUID can read that payment's status, amount,
   token, network, and `description` — another reason the `description` must
   stay free of PII.
-- Payment `id`s are safe to show to the **owning** customer (e.g. on an order
-  confirmation page) but should not be printed on public marketing materials.
+- Payment `id`s are safe to show to the **owning** customer (for example, on an
+  order confirmation page) but do not print them on public marketing materials.
 
 Fields that do **not** appear in the public response: your `account_id`, your
 wallet beyond what is needed to complete the payment, webhook secrets, and

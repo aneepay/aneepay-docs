@@ -16,7 +16,7 @@ Terms used across the AneePay documentation.
 | **`webhook_secret`** | Per-account secret used to compute and verify the `X-AneePay-Signature` HMAC. |
 | **`X-AneePay-Signature`** | Webhook signature: HMAC-SHA256 hex digest of the raw request body keyed with `webhook_secret`. |
 | **`operation_id`** | The payment UUID encoded as a `uint128` integer (`int(payment_id)`). Stored on-chain in `PaymentProcessed`, used in webhooks and for matching orders. Bijective with `payment_id`. |
-| **`payment_id`** | The payment's UUID primary key. Recoverable from `operation_id` via `uuid.UUID(int=operation_id)`. Publicly readable (see [status and polling](../payments/status-and-polling.md)). |
+| **`payment_id`** | The payment's UUID primary key. Recoverable from `operation_id` with `uuid.UUID(int=operation_id)`. Publicly readable (see [status and polling](../payments/status-and-polling.md)). |
 | **`PaymentProcessed`** | Smart-contract event emitted when funds are moved; the trigger for status confirmation. |
 | **Confirmations / finality** | Number of blocks (default 12) AneePay waits after the on-chain event before marking a payment `success`. |
 | **0.5% fee** | Flat platform fee (50 basis points), calculated and deducted on-chain inside the contract; the only platform fee. Gas is paid by the payer. |
@@ -26,7 +26,7 @@ Terms used across the AneePay documentation.
 | **Polygon / Amoy** | Production network (chain ID 137) and test network (chain ID 80002) used by AneePay. |
 | **USDT / USDC / DAI** | ERC-20 stablecoins accepted on Polygon; sandbox uses test USDC on Amoy. |
 | **Idempotency (webhooks)** | Safe duplicate handling: process each webhook once, keyed by `event_id`, regardless of retries. |
-| **Reconciliation** | Matching your order records against AneePay's payment history via `GET /accounts/{account_id}/payments` and/or webhooks. |
+| **Reconciliation** | Matching your order records against AneePay's payment history with `GET /accounts/{account_id}/payments` or webhooks. |
 | **ReDoc / `openapi.json`** | Auto-generated API reference at `https://api.aneepay.com/redoc` and its machine-readable schema. |
 | **Gateway clone** | Per-merchant minimal proxy of the x402 gateway contract (EIP-1167/CREATE2); its `payTo` address receives x402 settlements. |
 | **Facilitator** | Server that verifies and settles x402 payments on behalf of a resource server (`/x402/verify`, `/x402/settle`). |

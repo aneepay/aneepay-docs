@@ -14,7 +14,7 @@ enter your email address in the **Partner Program** form, then press
 - If you already have an AneePay account for that email, registering creates
   the partner profile for it — you do not end up with two profiles.
 
-!!! success "You will see this confirmation"
+!!! success "The confirmation you see"
 
     `Partner login link sent. Check your email (Valid for 10 min).`
 
@@ -35,14 +35,14 @@ same email does not create a duplicate partner profile.
 ## 3. Set up your payout wallet
 
 After the first login you land on **Setup Your Wallet**. Add the **Polygon**
-wallet address that should receive your DAI payouts.
+wallet address that receives your DAI payouts.
 
 - Any valid EVM address is accepted; it is stored checksum-normalized, so
   `0xab58…` becomes `0xAb58…`.
 - An invalid address (too short, not hex) is rejected with a field error.
 - You can register and confirm your email **before** you have a wallet
-  ready — the dashboard simply stays locked until one is on file.
-- The address is saved with one click; if you land on the form again it simply
+  ready — the dashboard stays locked until one is on file.
+- The address is saved with one click; if you land on the form again it
   redirects you to the dashboard, so a saved wallet is not editable there. To
   move payouts to a different address, contact support.
 
@@ -85,8 +85,8 @@ Rules worth knowing before you share the link:
   stored — a second link does not overwrite it.
 - The cookie alone attributes nothing: the merchant must **create the
   account** while it is still valid.
-- Attribution is **first touch** and permanent. Another partner's link will
-  not take the account away from you, and yours will not take it from them.
+- Attribution is **first touch** and permanent. Another partner's link does
+  not take the account away from you, and yours does not take it from them.
 - Unknown, invalid, or not-yet-active partner IDs in `?ref=` are ignored.
 
 ## 5. Track and withdraw

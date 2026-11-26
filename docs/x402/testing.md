@@ -116,7 +116,7 @@ catches wiring mistakes early:
 | No `PAYMENT-SIGNATURE` header                    | `402` + `PAYMENT-REQUIRED`, facilitator never called             |
 | Valid signature, facilitator accepts, handler OK | `200` + `PAYMENT-RESPONSE`; `/verify` then `/settle` in order    |
 | Malformed header (bad base64/JSON)               | `402` with a client-safe message, **no** `/verify` call          |
-| Facilitator returns `isValid: false`             | `402` with its code (e.g. `invalid_exact_evm_payload_signature`) |
+| Facilitator returns `isValid: false`             | `402` with its code (for example `invalid_exact_evm_payload_signature`) |
 | `authorization.to` ≠ `payTo` or amount mismatch  | `402` from local checks, **no** `/verify` call                   |
 | Handler returns ≥ 400                            | Pass-through status, **no** `/settle`, no `PAYMENT-RESPONSE`     |
 | Facilitator settle returns failure               | `402` with `unexpected_settle_error`                             |

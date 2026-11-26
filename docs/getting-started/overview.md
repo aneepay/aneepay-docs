@@ -34,7 +34,7 @@ custody, and no counterparty risk on our side.
 6. AneePay receives the event, waits for confirmation, sets the payment
    status to `success`, and sends a signed webhook to your `status_url`.
 7. The dApp redirects the customer's browser to your `success_url` or
-   `fail_url`. You track the authoritative status via webhook or API polling.
+   `fail_url`. You track the authoritative status from a webhook or API polling.
 
 ```mermaid
 sequenceDiagram
@@ -75,13 +75,13 @@ the payer through standard wallet estimation; the 0.5% is the only platform fee.
 You never build a payment page. `checkout_url` renders a ready-made page that:
 
 - shows a QR code and a MetaMask deep link;
-- discovers the wallet via EIP-6963 multi-provider discovery (fallback to
+- discovers the wallet with EIP-6963 multi-provider discovery (fallback to
   `window.ethereum`);
 - switches the customer to the right network (Polygon 137 or Amoy 80002);
 - checks balance and allowance, submits the transaction, waits for it;
 - redirects the customer to your `success_url` or `fail_url`.
 
-The authoritative confirmation still comes to **your** backend — via the signed
+The authoritative confirmation still comes to **your** backend — with the signed
 webhook or by polling `GET /payments/{id}`.
 
 ## What AneePay does not do

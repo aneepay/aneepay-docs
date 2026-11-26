@@ -139,7 +139,7 @@ centralized processors do.
 Any EIP-1193 wallet works in a desktop browser or an in-app browser; the checkout
 also discovers wallets through EIP-6963. On mobile, MetaMask is the tested path —
 scan the QR code or use the MetaMask deep link. Other mobile wallets are not
-currently tested.
+tested.
 
 ### The QR code does not work — what now?
 

@@ -92,10 +92,11 @@ Platform-specific details and defaults:
 
 ## Amount conversion
 
-Store currencies are usually not USD. A plugin converts **store total → USD →
-token** using a live ECB rate (with store-rate and manual fallbacks) and rounds the
-token amount **up** to two decimals, so the merchant never undercharges. The exact
-amount the customer pays is shown on the payment method card at checkout. See
+Store currencies are usually not USD. A plugin converts the store total to USD,
+then to the token, using a live ECB rate (with store-rate and manual fallbacks)
+and rounds the token amount **up** to two decimals, so the merchant never
+undercharges. The exact amount the customer pays is shown on the payment
+method card at checkout. See
 [Amounts and rounding](../payments/amounts-rounding-and-limits.md).
 
 ## What the plugins do not do

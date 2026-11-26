@@ -64,7 +64,7 @@ Every error response carries a machine-readable
 
 | `code`                  | When                                                                 |
 | ----------------------- | -------------------------------------------------------------------- |
-| `payload_too_large`     | The request body exceeds 1 MiB. Enforced for **every** method, including `GET`, before routing — a large body on a read endpoint is rejected just the same. |
+| `payload_too_large`     | The request body exceeds 1 MiB. Enforced for **every** method, including `GET`, before routing — a large body on a read endpoint is rejected the same way. |
 
 ### 429 — rate limited
 
@@ -110,12 +110,12 @@ Unknown paths (`404`), wrong methods (`405`), and other framework-level errors u
 !!! note "Which statuses the application really emits"
 
     Payment and account endpoints do not emit `400` (body problems are `422`),
-    but they do emit `413 payload_too_large` and `429 rate_limited` themselves -
+    but they do emit `413 payload_too_large` and `429 rate_limited` themselves —
     these are not reserved for an edge proxy. The x402 endpoints additionally
     return `400` for malformed wire payloads and `503 service_busy` when the
     verify/settle concurrency limit is hit. The dashboard CSV export endpoint
     (session-authenticated, not the public API) returns `429`/`413`/`400`
-    responses - see [Reconciliation](../payments/reconciliation.md).
+    responses — see [Reconciliation](../payments/reconciliation.md).
 
 ## Validation errors in detail
 

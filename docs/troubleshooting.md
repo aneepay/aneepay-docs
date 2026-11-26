@@ -10,7 +10,7 @@ errors) or the payment `operation_id` to [support](#support).
 | `403 account_not_found` | The `X-Account-Id` value is a valid UUID, but no such account exists | Check the account UUID on the dashboard card ([Errors](errors/index.md)). A **missing or malformed** header is `422 validation_error` instead. Remember: unknown is deliberately 403, not 404. |
 | `403 account_not_safe` | Account domain flagged `is_safe: false` | Complete the reputation review or test with `?sandbox=yes` (bypasses the check). |
 | `403 domain_mismatch` | Browser `Origin` host ≠ account `domain` | Call from your server (no Origin) or fix the registered domain. |
-| `422 validation_error` | Bad `amount`/`token`/`network`, `description` > 500 chars, or unknown field | Read `errors[]`; unknown fields such as `"amt"` are rejected. |
+| `422 validation_error` | Bad `amount`/`token`/`network`, `description` > 500 characters, or unknown field | Read `errors[]`; unknown fields such as `"amt"` are rejected. |
 | `422 split_owner_not_recipient` | Account wallet missing from split `recipients` | Add the account wallet with a non-zero share. |
 | `422 split_sandbox_unsupported` | Split payments are not available in sandbox for your account | Contact support. |
 | `503 split_payment_unavailable` | Split payments are not available on this network | Use regular payments, or contact support. |
@@ -24,14 +24,14 @@ errors) or the payment `operation_id` to [support](#support).
 | QR does nothing | Poor screen/scan conditions | Use the **Pay with MetaMask** deeplink under the QR — same payload. |
 | Transaction reverts in the wallet | Wrong network, insufficient token balance/allowance, zero amount, native POL instead of a token | dApp handles switching/approval automatically; manual payments must be on the right network with enough USDT/USDC/DAI + POL gas. |
 | Customer sent a different amount | Amount is fixed at creation | Payment does not complete as expected; the on-chain transaction either reverts or does not match — customer retries with the exact amount. |
-| Payment stuck in `pending` | Waiting for 12 confirmations; customer never actually sent the transaction; wrong network paid | Check the explorer via `payment_details.tx_hash` / `operation_id`; wait for confirmations; if the customer paid on the wrong chain, funds are not on Polygon — retry on the correct network. |
+| Payment stuck in `pending` | Waiting for 12 confirmations; customer never actually sent the transaction; wrong network paid | Check the explorer with `payment_details.tx_hash` / `operation_id`; wait for confirmations; if the customer paid on the wrong chain, funds are not on Polygon — retry on the correct network. |
 | Redirect to `success_url` did not happen | Customer closed the tab early | Do not rely on redirects for fulfillment — use webhooks/polling ([Status and polling](payments/status-and-polling.md)). |
 
 ## Webhooks
 
 | Symptom | Likely cause | Fix |
 | ------- | ------------ | ----- |
-| No webhook at all | `status_url` empty on the account; payment not `success`; no `status_url` at confirmation time | Set `status_url`; confirm `GET /payments/{id}` shows `success`; payments confirmed before the URL was set are never delivered — reconcile via [the payments list](payments/reconciliation.md). |
+| No webhook at all | `status_url` empty on the account; payment not `success`; no `status_url` at confirmation time | Set `status_url`; confirm `GET /payments/{id}` shows `success`; payments confirmed before the URL was set are never delivered — reconcile from [the payments list](payments/reconciliation.md). |
 | Webhook receiver returns `401` | Signature computed over re-serialized JSON, wrong secret, or body mutated by middleware | Verify HMAC-SHA256 over the **raw bytes** with constant-time compare ([Payload and signature](webhooks/payload-and-signature.md)). |
 | Webhooks stop after ~4 minutes | Endpoint failing all 8 attempts (backoff window ≈ 4 min 14 s) | Fix the endpoint; missed events are recovered by reconciliation ([Delivery and retries](webhooks/delivery-retries-idempotency.md)). |
 | Duplicate webhooks | At-least-once delivery by design | Dedupe by `event_id` (UNIQUE constraint), respond 2xx. |
@@ -46,7 +46,7 @@ errors) or the payment `operation_id` to [support](#support).
 | Payments list empty | Wrong `account_id` in the path, filters too narrow, naive datetime interpreted as UTC | Use your account UUID; widen `created_from`/`created_to`; remember naive datetimes are treated as UTC. |
 | CSV export `429` | Rate limit 60 requests/min | Slow down; the limit is per IP address on the dashboard export. |
 | CSV export `413` | More than 10 000 rows in one export | Narrow the date range. |
-| `GET /payments/{id}` returns 403 | It should not — this endpoint is public | You are probably calling an account-scoped route; check the path. |
+| `GET /payments/{id}` returns 403 | Unexpected: this endpoint is public | You are probably calling an account-scoped route; check the path. |
 
 ## Account and security
 

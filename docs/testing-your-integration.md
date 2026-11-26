@@ -74,7 +74,7 @@ Failure drills:
 ## 7. Production pass
 
 - [ ] Same checklist with production payments, tiny real amounts
-      (e.g. 1 USDT on Polygon).
+      (for example, 1 USDT on Polygon).
 - [ ] `status_url` is a public HTTPS endpoint; private and loopback addresses
       are rejected.
 - [ ] Customer pays gas in POL from their own wallet; funds arrive on your

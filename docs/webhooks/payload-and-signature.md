@@ -8,7 +8,7 @@ signature header you must verify before processing anything.
 The canonical contract is the public JSON Schema at
 <https://aneepay.com/schemas/webhook-v1.json>. All fields are **required**; the
 schema forbids extra properties (`additionalProperties: false`), so a field set
-can only change via a new `version`.
+can only change with a new `version`.
 
 ```json
 {
@@ -135,7 +135,7 @@ async def aneepay_webhook(request: Request):
 | Works locally, fails in prod     | Framework switched to parsed-body mode only in production     |
 | `401` on correct requests        | Header name case confusion — use case-insensitive lookup      |
 
-On a mismatch: return **401** and do not process the payload. Retries will keep the
+On a mismatch: return **401** and do not process the payload. Retries keep the
 same body and signature, so a transient bug on your side does not corrupt anything —
 fix the verifier and let the retries redeliver
 (see [Testing webhooks](testing-and-replay.md)).

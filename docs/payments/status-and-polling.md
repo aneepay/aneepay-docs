@@ -46,7 +46,7 @@ No authentication headers. The path parameter is the payment UUID returned by
 | `is_confirmed` | `true` once the payment is finalized on-chain. |
 | `created_at` | ISO-8601 creation time (UTC). |
 | `confirmed_at` | ISO-8601 confirmation time, or `null`. |
-| `payment_details` | Provider metadata; **schema varies by `payment_type`**. Commonly: `amount`, `token`, `network`, `description`. After success it also carries `fee` and `net_amount`; split payments additionally carry `recipients`. x402-settled payments carry **only** an `x402` object (`amount_atomic`, `fee_atomic`, `net_atomic`, `payTo`, `state`, plus `transaction` once broadcast) - no `amount`/`token`/`network`/`description` keys at all, so read those from the settlement response instead. |
+| `payment_details` | Provider metadata; **schema varies by `payment_type`**. Commonly: `amount`, `token`, `network`, `description`. After success it also carries `fee` and `net_amount`; split payments additionally carry `recipients`. x402-settled payments carry **only** an `x402` object (`amount_atomic`, `fee_atomic`, `net_atomic`, `payTo`, `state`, plus `transaction` once broadcast) — no `amount`/`token`/`network`/`description` keys at all, so read those from the settlement response instead. |
 
 ## Success example
 

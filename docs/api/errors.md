@@ -19,29 +19,29 @@ Every error from the public API uses **RFC 7807** with
 
 | Field | Meaning |
 | --- | --- |
-| `code` | Machine-readable code - **branch on this, not on `detail`**. |
+| `code` | Machine-readable code — **branch on this, not on `detail`**. |
 | `request_id` | Correlation id for support; taken from your `X-Request-ID` header if you send one, otherwise generated. |
 | `instance` | Request path that produced the error. |
-| `type` | Always `about:blank` - there is no per-error URL catalog. |
+| `type` | Always `about:blank` — there is no per-error URL catalog. |
 
 On `422 validation_error` the envelope additionally carries `errors[]` with
-`loc`, `msg`, and `type` per field - including fields that live in the header,
+`loc`, `msg`, and `type` per field — including fields that live in the header,
 such as a missing `X-Account-Id`.
 
 The complete field reference, examples, and the full code tables by status are
-in the [Errors section](../errors/index.md) - one page, shared by the API, the
+in the [Errors section](../errors/index.md) — one page, shared by the API, the
 dashboard, and x402.
 
 ## Status codes at a glance
 
 | Status | Codes |
 | --- | --- |
-| `400` | `invalid_x402_version`, `invalid_payload` - malformed x402 wire payloads (x402 endpoints only). |
+| `400` | `invalid_x402_version`, `invalid_payload` — malformed x402 wire payloads (x402 endpoints only). |
 | `403` | `account_not_found`, `account_not_safe`, `domain_mismatch`, `account_id_mismatch`, `account_error` |
 | `404` | `payment_not_found`, `http_error` (unknown path) |
-| `413` | `payload_too_large` - request body above 1 MiB, on any method. |
+| `413` | `payload_too_large` — request body above 1 MiB, on any method. |
 | `422` | `validation_error`, `split_owner_not_recipient`, `split_sandbox_unsupported` |
-| `429` | `rate_limited` - per-IP limit hit; honour `Retry-After`. |
+| `429` | `rate_limited` — per-IP limit hit; honour `Retry-After`. |
 | `500` | `payment_creation_failed`, `payment_error`, `split_payment_error`, `database_error`, `domain_error`, `internal_error` |
 | `503` | `split_payment_unavailable`, `service_busy` |
 
@@ -49,7 +49,7 @@ dashboard, and x402.
 
     Payment and account endpoints never answer `400` (body/schema problems are
     `422`). They do answer `429 rate_limited` and `413 payload_too_large`
-    themselves - rate limits are in-app and per IP, not only at the edge (see
+    themselves — rate limits are in-app and per IP, not only at the edge (see
     [Errors](../errors/index.md#429-rate-limited)). The x402 endpoints
     additionally return `400` for malformed wire payloads and
     `503 service_busy` when too many `verify`/`settle` calls run at once.
@@ -69,7 +69,7 @@ The rules, with a decision table, are spelled out in
 
 ## Related sections
 
-- [Authentication](authentication.md) - what produces `403 account_not_found`.
-- [Errors section](../errors/index.md) - full code reference.
-- [Troubleshooting](../troubleshooting.md) - symptom -> cause -> fix.
-- [x402 troubleshooting](../x402/troubleshooting.md) - x402-specific failures.
+- [Authentication](authentication.md) — what produces `403 account_not_found`.
+- [Errors section](../errors/index.md) — full code reference.
+- [Troubleshooting](../troubleshooting.md) — symptom -> cause -> fix.
+- [x402 troubleshooting](../x402/troubleshooting.md) — x402-specific failures.

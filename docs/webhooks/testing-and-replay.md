@@ -59,7 +59,7 @@ fields — treat them as production-shaped traffic for everything except fulfill
 
 ## 3. Failure-injection drills
 
-| Drill                         | How to simulate                                | What you should observe                                    |
+| Drill                         | How to simulate                                | What to expect                                    |
 | ----------------------------- | ---------------------------------------------- | ---------------------------------------------------------- |
 | Signature rejection           | Change one byte of the body / wrong secret     | Your endpoint returns 401; AneePay retries; event never applied |
 | Endpoint down                 | Stop the receiver                               | Attempts 1–8 with exponential backoff (~4 min window)      |
@@ -95,7 +95,7 @@ backfill the orders you still have open.
 - [ ] No reliance on `timestamp` for authorization (it is informational; the signature
       is the trust anchor).
 - [ ] `status_url` is a public HTTPS URL in production.
-- [ ] Fallback path exists: periodic reconciliation via `GET /accounts/{id}/payments`.
+- [ ] Fallback path exists: periodic reconciliation with `GET /accounts/{id}/payments`.
 
 ## 6. Contract validation
 

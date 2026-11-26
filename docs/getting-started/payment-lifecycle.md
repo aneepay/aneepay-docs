@@ -55,9 +55,9 @@ Fee and net amount (`fee`, `net_amount`) become visible at this point, in
 
 If the customer never completes the transaction or their wallet rejects it,
 there is nothing to confirm on-chain and the payment ends `failed`; the dApp
-sends the customer to `fail_url`. A payment that is simply abandoned stays
-`pending` until you decide how to handle it (e.g. expire orders in your own
-system and create a new payment when the customer returns).
+sends the customer to `fail_url`. A payment that is abandoned stays
+`pending` until you decide how to handle it (for example, expire orders in
+your own system and create a new payment when the customer returns).
 
 ## No customer cancellation, no refunds
 

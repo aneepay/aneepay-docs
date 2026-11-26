@@ -10,7 +10,7 @@ humans.
 | --- | --- |
 | <https://api.aneepay.com/redoc> | Human-readable documentation (ReDoc). The API root `/` redirects here. |
 | <https://api.aneepay.com/openapi.json> | The machine-readable OpenAPI 3.1 document. |
-| <https://api.aneepay.com/docs> | Swagger UI is **disabled** - only ReDoc and the raw document are served. |
+| <https://api.aneepay.com/docs> | Swagger UI is **disabled** — only ReDoc and the raw document are served. |
 
 ```bash title="Terminal"
 # Read the documentation in a browser:
@@ -56,12 +56,12 @@ npx @openapitools/openapi-generator-cli generate \
 
 - Error examples in the document use `request_id: "-"` as a placeholder; real
   responses carry a UUID.
-- The schema has no `servers` block - construct every URL from the base
+- The schema has no `servers` block — construct every URL from the base
   `https://api.aneepay.com` yourself.
 
 ## Related sections
 
-- [Overview](overview.md) - base URL, content types, conventions.
-- [Endpoints](endpoints.md) - endpoint map with links to scenario pages.
-- [Versioning and deprecation](versioning-and-deprecation.md) - how the contract evolves.
-- [Changelog](changelog.md) - published changes.
+- [Overview](overview.md) — base URL, content types, conventions.
+- [Endpoints](endpoints.md) — endpoint map with links to scenario pages.
+- [Versioning and deprecation](versioning-and-deprecation.md) — how the contract evolves.
+- [Changelog](changelog.md) — published changes.

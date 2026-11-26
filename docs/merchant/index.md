@@ -10,7 +10,7 @@ arrives. Funds go directly to your wallet — AneePay is strictly non-custodial.
 2. Accept a test payment: [Quickstart](../getting-started/quickstart.md).
 3. Configure domain, wallet, callbacks, and webhook secret:
    [Account setup](../getting-started/account-setup.md).
-4. Know the states your orders will see:
+4. Know the states your orders go through:
    [Payment lifecycle](../getting-started/payment-lifecycle.md).
 
 ## Payment acceptance

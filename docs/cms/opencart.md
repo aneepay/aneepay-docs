@@ -52,7 +52,7 @@ Settings live at **Extensions → Payments → AneePay → Edit**.
 | Test Mode                                   | no       | Adds `?sandbox=yes` (Amoy + USDC, `is_safe` bypass).                              |
 | Cryptocurrency                              | no       | `usdt` (default), `usdc`, `dai`. Ignored in sandbox (always USDC).                |
 | Blockchain                                  | no       | `polygon` (default) or `amoy`. Amoy is forced in sandbox.                         |
-| Exchange Rate Source                        | no       | **Auto** (ECB via Frankfurter, store rate as fallback) or **manual only**.        |
+| Exchange Rate Source                        | no       | **Auto** (ECB from Frankfurter, store rate as fallback) or **manual only**.        |
 | Manual Exchange Rate                        | no       | Store-currency units per 1 token; must be positive.                               |
 | Order status: pending / paid / failed / cancelled | yes | Which OpenCart order status each payment status maps to (see defaults below).     |
 | Abandoned Payment Expiry (minutes)          | no       | Pending orders older than this are closed by the cron job. Default 120; **0 disables**. |
@@ -100,9 +100,10 @@ Additionally, the settings page shows a **cron URL** (see
 
 1. The customer selects AneePay on the checkout confirmation page; the payment
    method card shows the conversion breakdown ("You will pay X TOKEN").
-2. On confirm the plugin converts the order total (store currency → USD → token,
-   rounded **up** to 2 decimals) and calls `POST /payments/` **from the store
-   server** with `description: "Order #<order_id>"`.
+2. On confirm the plugin converts the order total from the store currency to
+   USD and then to the token, rounding **up** to 2 decimals, and calls
+   `POST /payments/` **from the store server** with
+   `description: "Order #<order_id>"`.
 3. The order moves to the configured **pending** status and the customer is
    redirected to `checkout_url`.
 4. The mapping (`payment_id`, `operation_id`, `checkout_url`, amounts, rate
@@ -275,8 +276,8 @@ scheduler; requests carrying an old secret are rejected with `403`.
 
 | Symptom                                       | Likely cause                                                              | Fix                                                            |
 | --------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Extension missing after upload                | Zip not installed via **Extensions → Installer**, or `upload/` not copied | Re-upload the `.ocmod.zip`, then Install the payment extension  |
-| Settings will not save                        | Invalid Account ID, empty secret, or the same order status picked twice   | Enter a UUID; keep the secret non-empty; pick four distinct statuses |
+| Extension missing after upload                | Zip not installed with **Extensions → Installer**, or `upload/` not copied | Re-upload the `.ocmod.zip`, then Install the payment extension  |
+| Settings do not save                        | Invalid Account ID, empty secret, or the same order status picked twice   | Enter a UUID; keep the secret non-empty; pick four distinct statuses |
 | Webhooks return `401`                         | Wrong or missing Webhook Secret                                           | Copy the secret from the AneePay account panel                 |
 | Webhook returns `400`                         | Non-JSON body, unknown `status`, or a missing/non-numeric `timestamp`     | Send the documented payload; do not reformat the body           |
 | Order stays pending though paid               | `status_url` not set in the account panel, or cron not scheduled          | Set the account URLs; schedule the cron URL in crontab          |

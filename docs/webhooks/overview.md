@@ -54,14 +54,14 @@ Key properties:
 | Success       | Your endpoint must answer any **2xx** within 10 seconds                      |
 | Retry policy  | Up to 8 attempts, exponential backoff — see [Delivery and retries](delivery-retries-idempotency.md) |
 | Guarantee     | **At-least-once**; duplicates are possible, handle them idempotently by `event_id` |
-| Scope         | No `account_id` in the payload — identify the payment via `event_id` / `operation_id` |
+| Scope         | No `account_id` in the payload — identify the payment with `event_id` or `operation_id` |
 
 ## What you must handle
 
 1. **Verify the signature** on every request before trusting the body —
    [Payload and signature](payload-and-signature.md).
 2. **Respond 2xx fast.** Do the heavy work (order fulfillment, DB writes) asynchronously;
-   the sender times out after 10 seconds and will retry anyway.
+   the sender times out after 10 seconds and retries anyway.
 3. **Be idempotent.** The same `event_id` may arrive more than once (retries).
    Deduplicate by `event_id` — see
    [Delivery and retries](delivery-retries-idempotency.md).

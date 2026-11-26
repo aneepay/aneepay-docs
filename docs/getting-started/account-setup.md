@@ -13,7 +13,7 @@ The dashboard uses **passwordless login**:
 3. Follow the link — you land in the dashboard with an active session
    (sessions last up to 2 weeks).
 
-An expired or invalid link shows an error page — just request a new one.
+An expired or invalid link shows an error page — request a new one.
 
 ## Account fields
 
@@ -21,7 +21,7 @@ An expired or invalid link shows an error page — just request a new one.
 | --- | --- |
 | `id` | Account UUID — your API key, sent as `X-Account-Id`. |
 | `domain` | Registered site domain; checked against the `Origin` header and against malicious-domain databases. Must be unique. |
-| `wallet` | EVM address (42 chars, `0x…`) that receives the net payment amount. |
+| `wallet` | EVM address (42 characters, `0x…`) that receives the net payment amount. |
 | `success_url` | Page on **your** site where the customer lands after a successful payment. |
 | `fail_url` | Page on **your** site for failed payments, with a retry option. |
 | `status_url` | Server endpoint on **your** site that receives the success webhook. |
@@ -80,7 +80,7 @@ If you believe your domain was flagged by mistake, contact support.
 ## Key rotation
 
 !!! warning "No key rotation endpoint"
-    There is currently **no API to rotate `account_id`**. Creating a new
+    There is **no API to rotate `account_id`**. Creating a new
     account means a new integration on your side (new header value, new
     webhook secret, re-registered domain); the old account keeps its history.
     Treat the account UUID like any other API key: never expose it client-side.
@@ -103,4 +103,4 @@ If you believe your domain was flagged by mistake, contact support.
 
 - [Quickstart](quickstart.md) — create the first payment.
 - [Account payments and export](../payments/reconciliation.md) — reconcile
-  via `GET /accounts/{account_id}/payments`.
+  with `GET /accounts/{account_id}/payments`.

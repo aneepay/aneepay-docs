@@ -174,7 +174,7 @@ Start your service, then request a paid route **without** a payment header:
 curl -i https://<your-server>/report
 ```
 
-You should get `402 Payment Required`, a JSON body describing the offer, and a
+You get `402 Payment Required`, a JSON body describing the offer, and a
 `PAYMENT-REQUIRED` header whose base64 payload decodes to the same document.
 If you get `200` instead, the route is not matched by your dispatch — the
 middleware only protects paths you hand it explicitly.

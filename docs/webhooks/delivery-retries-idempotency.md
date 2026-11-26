@@ -45,9 +45,9 @@ failing endpoint sees:
 | 7       | 64 s            | 2 m 6 s              |
 | 8       | 128 s           | 4 m 14 s             |
 
-After the 8th failed attempt the delivery becomes terminally **failed** and will not
-be retried automatically. There is no merchant API to request a redelivery — recover
-missed events via [the payments list](../payments/reconciliation.md) and backfill
+After the 8th failed attempt the delivery becomes terminally **failed** and is not
+retried automatically. There is no merchant API to request a redelivery — recover
+missed events from [the payments list](../payments/reconciliation.md) and backfill
 your orders.
 
 !!! note

@@ -11,11 +11,11 @@ channel; the read endpoints exist for reconciliation and gap filling.
 | Direction | AneePay -> your `status_url` (HTTPS recommended; `http` is accepted) |
 | Method / type | `POST`, `Content-Type: application/json` |
 | Events | One event type: `status: "success"` when a payment is confirmed |
-| Payload | Version `1`, fixed field set - see [Payload and signature](../webhooks/payload-and-signature.md) and the `webhook-v1` schema |
-| Signature | `X-AneePay-Signature: <hex>` - HMAC-SHA256 of the **raw body** with your account's `webhook_secret` |
+| Payload | Version `1`, fixed field set — see [Payload and signature](../webhooks/payload-and-signature.md) and the `webhook-v1` schema |
+| Signature | `X-AneePay-Signature: <hex>` — HMAC-SHA256 of the **raw body** with your account's `webhook_secret` |
 | Response handling | Any `2xx` counts as delivered; everything else is retried |
-| Retries | Up to 8 attempts with exponential backoff (2 s -> 300 s) - see [Delivery and retries](../webhooks/delivery-retries-idempotency.md) |
-| Idempotency | `event_id` is stable across retries and replays - deduplicate on it |
+| Retries | Up to 8 attempts with exponential backoff (2 s to 300 s) — see [Delivery and retries](../webhooks/delivery-retries-idempotency.md) |
+| Idempotency | `event_id` is stable across retries and replays — deduplicate on it |
 
 ```text
 POST /your/status/url HTTP/1.1
@@ -27,7 +27,7 @@ X-AneePay-Signature: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f
 
 Compute the HMAC-SHA256 of the exact bytes you received with your
 `webhook_secret` and compare in constant time. Reject the request on mismatch,
-and respond `2xx` quickly - process it asynchronously, since delivery timeouts
+and respond `2xx` quickly — process it asynchronously, since delivery timeouts
 count as failures.
 
 Your `webhook_secret` is shown on the account card in the
@@ -43,8 +43,8 @@ Your `webhook_secret` is shown on the account card in the
 
 ## Related sections
 
-- [Webhooks overview](../webhooks/overview.md) - event flow.
-- [Payload and signature](../webhooks/payload-and-signature.md) - field-by-field contract.
-- [Delivery, retries, idempotency](../webhooks/delivery-retries-idempotency.md) - retry policy details.
-- [Testing webhooks](../webhooks/testing-and-replay.md) - replay and local verification.
-- [Endpoints](endpoints.md) - the read endpoints used alongside webhooks.
+- [Webhooks overview](../webhooks/overview.md) — event flow.
+- [Payload and signature](../webhooks/payload-and-signature.md) — field-by-field contract.
+- [Delivery, retries, idempotency](../webhooks/delivery-retries-idempotency.md) — retry policy details.
+- [Testing webhooks](../webhooks/testing-and-replay.md) — replay and local verification.
+- [Endpoints](endpoints.md) — the read endpoints used alongside webhooks.

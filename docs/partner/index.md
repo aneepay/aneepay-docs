@@ -16,7 +16,7 @@ are paid out in DAI on Polygon whenever you ask for them.
 | Step | What happens                                                                       |
 | ---- | ---------------------------------------------------------------------------------- |
 | 1    | You [register](getting-started.md) with an email and confirm the magic link        |
-| 2    | You add the Polygon wallet address that should receive DAI payouts                 |
+| 2    | You add the Polygon wallet address that receives DAI payouts                 |
 | 3    | You copy your referral link and share it with merchants                            |
 | 4    | A merchant who signs up through your link is attributed to you permanently         |
 | 5    | Each of their successful payments earns you a commission, held for 7 days          |

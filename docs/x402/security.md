@@ -76,7 +76,7 @@ No merchant key exists in the system to steal: the payout destination is
 | Facilitator redirects funds            | Impossible: no recipient argument, `merchant` fixed at initialization                                                                        |
 | Compromised settlement key             | The service can submit settlements only to merchants already bound to their clone, and never holds or redirects merchant funds               |
 | Tampered offer (amount/asset swapped)  | Amount compared byte-for-byte; asset and network checked against your config before `/verify`                                                |
-| Leaked account id                      | Identifies your account but moves no funds without a valid on-chain authorization; still: keep it server-side, rotate via support if exposed |
+| Leaked account id                      | Identifies your account but moves no funds without a valid on-chain authorization; still: keep it server-side, rotate through support if exposed |
 | Error text leaking infrastructure      | `FacilitatorError` messages can reveal service URLs — scrub them if your client surface is public                                            |
 | Unencrypted transport                  | Run the resource server and all facilitator calls over TLS                                                                                   |
 

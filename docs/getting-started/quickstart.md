@@ -16,7 +16,7 @@ on-chain, and the net amount lands directly in your wallet.
 1. Open [aneepay.com](https://aneepay.com) and submit your email.
 2. You receive a **magic login link** (valid for 10 minutes). Click it —
    no password is needed.
-3. In the dashboard, create an account:
+3. In the merchant dashboard, create an account:
     - `domain` — your site domain (must be unique);
     - `wallet` — the EVM address that receives payments;
     - `success_url`, `fail_url` — pages on **your** site where the customer
@@ -28,7 +28,8 @@ on-chain, and the net amount lands directly in your wallet.
     - **Webhook secret** — used to verify `X-AneePay-Signature`; it stays on
       the account card and there is no rotation control.
 
-Full field reference and safety rules: [Account setup](account-setup.md).
+The full field reference and safety rules are in
+[Account setup](account-setup.md).
 
 !!! warning "Domain safety (`is_safe`)"
     New accounts start with `is_safe: false`. AneePay periodically checks your
@@ -39,7 +40,7 @@ Full field reference and safety rules: [Account setup](account-setup.md).
 
 ## 2. Create a payment (server-side)
 
-Call the API from your backend. Never from the browser — that would expose
+Call the API from your backend, never from the browser: a browser call exposes
 `X-Account-Id`.
 
 ```bash title="Terminal"
@@ -61,9 +62,10 @@ Response:
 ```
 
 - `amount` must be greater than zero; it is rounded to 2 decimal places.
-- `token` ∈ `usdt`, `usdc`, `dai`; `network` ∈ `polygon`, `amoy`.
-- `description` (max 500 chars) is **publicly readable** — put only an order
-  number or short item name there, never personal data.
+- `token` must be `usdt`, `usdc`, or `dai`; `network` must be `polygon` or
+  `amoy`.
+- `description` (max 500 characters) is **publicly readable** — put only an
+  order number or short item name there, never personal data.
 
 === "Python"
 
@@ -165,8 +167,8 @@ AneePay delivers:
 }
 ```
 
-Header `X-AneePay-Signature` is an HMAC-SHA256 hex digest of the **raw request
-body** with your `webhook_secret`:
+`X-AneePay-Signature` carries an HMAC-SHA256 hex digest of the **raw request
+body**, keyed with your `webhook_secret`:
 
 ```python title="verify_webhook.py" linenums="1"
 import hmac, hashlib
@@ -176,12 +178,12 @@ def verify_webhook(body: bytes, signature: str, secret: str) -> bool:
     return hmac.compare_digest(expected, signature)
 ```
 
-Rules:
+Handle each delivery like this:
 
 - Respond with `2xx`. Non-2xx responses are retried (up to 8 attempts with
   exponential backoff).
 - Process **idempotently by `event_id`** — duplicate delivery is possible.
-- Webhooks are sent only for `status: "success"`.
+- AneePay sends a webhook only when the payment reaches `success`.
 
 ### Option B: Polling
 
@@ -222,9 +224,10 @@ what you send. Public testnets can be slow — add retries to your dev workflow.
 
 - [ ] Payment creation happens **on the server**, never in the browser.
 - [ ] `X-Account-Id` header is present.
-- [ ] `amount > 0`; `token ∈ {usdt, usdc, dai}`; `network ∈ {polygon, amoy}`.
+- [ ] `amount > 0`; `token` is `usdt`, `usdc`, or `dai`; `network` is `polygon`
+  or `amoy`.
 - [ ] Customer is redirected to `checkout_url`.
-- [ ] Status is tracked via signed webhook and/or polling.
+- [ ] Status is tracked with a signed webhook, by polling, or both.
 - [ ] Webhook endpoint returns `2xx` and is idempotent by `event_id`.
 - [ ] Signature verification uses the **raw body**, not a re-serialized object.
 - [ ] Funds arrive in your `wallet` (0.5% already deducted).

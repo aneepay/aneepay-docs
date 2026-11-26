@@ -15,13 +15,13 @@
 
 ## What is not implemented
 
-| Area | What you should know |
+| Area | What to know |
 | ---- | -------------------- |
-| Refunds | There is no refund or cancellation call to the AneePay API. Refund the customer from your own wallet and change the order state by hand; the plugin will not fight you, `success` is the only status it treats as final. |
+| Refunds | There is no refund or cancellation call to the AneePay API. Refund the customer from your own wallet and change the order state by hand; the plugin leaves the order alone; `success` is the only status it treats as final. |
 | Partial payments | A payment is for the whole order total. There is no "pay the rest later" flow and no partial refund tracking. |
 | Subscriptions and recurring | No token vault, no stored credentials, no scheduled charges. Each order is a single payment. |
 | Fiat / cards | Crypto only: USDT, USDC and DAI on Polygon. No card acquiring, no bank transfer. |
-| WooCommerce blocks checkout | The gateway renders in the **classic** checkout only. A shop that runs the block-based Cart/Checkout page will not show AneePay among the payment methods. |
+| WooCommerce blocks checkout | The gateway renders in the **classic** checkout only. A shop that runs the block-based Cart/Checkout page does not show AneePay among the payment methods. |
 | OpenCart 4 | Only OpenCart 3.0.x is supported. OpenCart 4 changed the extension API and is not covered; the plugin also pins PHP 7.4 because OpenCart 3 does not run on PHP 8. |
 | Other platforms | Shopware, Magento, Bitrix and everything else have no plugin. Use the [custom integration recipe](custom-integration.md) — it is the same flow the plugins implement. |
 | Locales | All shopper-facing strings ship in English. WooCommerce and PrestaShop can be translated through their normal mechanisms; OpenCart ships `en-gb` only. |

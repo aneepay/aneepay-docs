@@ -14,7 +14,7 @@ Every AneePay plugin implements the same seven integration points:
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | Settings           | Account ID, Webhook Secret, domain, token/network, sandbox, rate source, order-status mapping.                                            |
 | Checkout hook      | On order creation: convert the amount, call `POST /payments/` server-side, store `payment_id`/`operation_id`, redirect to `checkout_url`. |
-| Order record       | Persist the payment link and conversion context on the order (meta or a mapping table).                                                   |
+| Order record       | Persist `checkout_url` and the conversion context on the order (meta or a mapping table).                                                   |
 | Webhook route      | A public endpoint used as `status_url`: verify signature → resolve order → apply status → answer 2xx.                                     |
 | Result pages       | `success_url` / `fail_url` on the store, plus a "payment pending" screen with a status check.                                             |
 | Status sync        | Background polling of pending orders (platform cron or a scheduled endpoint) as a webhook fallback.                                       |
@@ -63,7 +63,7 @@ account:
 - `operation_id` is a **128-bit unsigned integer**. Decode JSON with
   big-integers-as-strings (`JSON_BIGINT_AS_STRING` in PHP, `json` with
   `useBigIntegers`/string parsing elsewhere) — a float loses precision and the
-  order will never match. In PHP, convert `operation_id` back to the payment UUID
+  order never matches. In PHP, convert `operation_id` back to the payment UUID
   with an integer-safe routine (the plugins ship one).
 - Keep the customer-visible amount identical to what you sent: show the
   conversion breakdown at checkout, exactly like the official plugins do.
@@ -94,7 +94,7 @@ store of the target version.
 
 ## Release pipeline
 
-Whatever tooling you use, a release should walk the same steps in the same
+Whatever tooling you use, a release walks the same steps in the same
 order, because each one catches a class of defect the previous one cannot:
 
 1. **Lint** every PHP file (`php -l`) and every template; a syntax error in a
@@ -159,4 +159,4 @@ CMS knowledge.
 - [Custom integration](custom-integration.md) — the behavior to implement.
 - [Webhooks](../webhooks/overview.md) — the contract your webhook route fulfills.
 - [Security best practices](../security/best-practices.md) — merchant-side rules.
-- [Troubleshooting](troubleshooting.md) — what users will report.
+- [Troubleshooting](troubleshooting.md) — what users report.

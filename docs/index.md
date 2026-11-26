@@ -10,7 +10,7 @@ the payer to your wallet. The platform never holds or controls your assets.
 | Fee | Flat **0.5%**, deducted on-chain by the contract. |
 | KYC | None for payments or integration. Onboarding is an automated domain reputation check. |
 | Hosted checkout | Ready-made payment page (QR + MetaMask) hosted by AneePay. |
-| Webhooks | Signed server-to-server notifications on successful payments. |
+| Webhooks | Signed server-to-server requests on successful payments. |
 | Sandbox | Amoy testnet payments for development without real funds. |
 
 **Base URL:** `https://api.aneepay.com` (unversioned) — full reference at

@@ -53,7 +53,7 @@ The hold gives the payment time to settle fully before money moves. The
 dashboard shows both numbers side by side:
 
 - **Available to Withdraw** — accrued commissions you can cash out right now.
-- **In 7-day hold** — commissions that will become available as the hold
+- **In 7-day hold** — commissions that become available as the hold
   expires.
 
 Accrual runs automatically for **active** partners; the same accrual also runs
@@ -69,7 +69,7 @@ scheduled runs.
 4. All available commissions are grouped into a payout and sent to the wallet
    on file as a single DAI transfer.
 
-You will see:
+The dashboard shows:
 
 ```text
 Payout of 0.050000 DAI initiated to 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B

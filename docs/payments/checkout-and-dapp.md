@@ -36,11 +36,11 @@ sequenceDiagram
 
 Step by step:
 
-1. **Wallet discovery.** The page announces itself via **EIP-6963**
+1. **Wallet discovery.** The page announces itself with **EIP-6963**
    (multi-provider discovery) and accepts any announced provider, falling back
    to `window.ethereum`. If no wallet is found, it offers to open the page in
    the MetaMask app (deep link) or links to the MetaMask download page.
-2. **Network switching.** The wallet is switched to the payment's network via
+2. **Network switching.** The wallet is switched to the payment's network with
    `wallet_switchEthereumChain`, with `wallet_addEthereumChain` as fallback:
 
     | Network | chainId | RPC | Explorer |

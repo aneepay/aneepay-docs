@@ -68,7 +68,7 @@ independently confirm:
 | You can rely on | You must protect |
 | --- | --- |
 | On-chain settlement rules (fee, atomicity, replay protection) | Your server secrets: `webhook_secret`, `X-Account-Id` |
-| Public payment status via `GET /payments/{id}` | Your admin dashboard and CMS credentials |
+| Public payment status at `GET /payments/{id}` | Your admin dashboard and CMS credentials |
 | Webhook signature `X-AneePay-Signature` (HMAC-SHA256) | Where customer data appears in `description` |
 | RFC 7807 error codes and `request_id` | Your handling of retries — make it idempotent |
 

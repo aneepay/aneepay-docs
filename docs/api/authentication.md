@@ -8,7 +8,7 @@ header.
 !!! warning "Server-side only"
 
     `X-Account-Id` is an API key. Never send it from a browser, embed it in a
-    page, or put it in a mobile app - anything client-side leaks it. All
+    page, or put it in a mobile app — anything client-side leaks it. All
     authenticated calls must be proxied through your server.
 
 ## Which endpoints read the header
@@ -19,8 +19,8 @@ header.
 | `POST /payments/split/` | **Required** |
 | `GET /x402/merchant` | **Required** |
 | `POST /x402/settle` | **Required** |
-| `GET /payments/{payment_id}` | Not read - the payment UUID is the capability |
-| `GET /accounts/{account_id}/payments` | **Required** - and it must equal the `account_id` in the path, otherwise `403 account_id_mismatch` |
+| `GET /payments/{payment_id}` | Not read — the payment UUID is the capability |
+| `GET /accounts/{account_id}/payments` | **Required** — and it must equal the `account_id` in the path, otherwise `403 account_id_mismatch` |
 | `GET /x402/supported` | Not read |
 | `POST /x402/verify` | Not read |
 
@@ -31,7 +31,7 @@ before any business logic runs.
 
     `GET /payments/{payment_id}` addresses the payment by UUID alone, so anyone
     who knows a payment UUID can read that payment. Keep payment URLs
-    server-side, out of logs and referrers, just like the header value itself.
+    server-side, out of logs and referrers, like the header value itself.
     Listing an account's payments still requires the matching `X-Account-Id`
     header, so an account UUID on its own does not expose the list.
 
@@ -44,7 +44,7 @@ before any business logic runs.
 | Valid UUID, no such account | `403 account_not_found` |
 | Account flagged `is_safe: false` | `403 account_not_safe` |
 
-```json title="422 - missing header"
+```json title="422 — missing header"
 {
   "type": "about:blank",
   "title": "Request Validation Failed",
@@ -64,10 +64,10 @@ before any business logic runs.
 ```
 
 There is **no `401`** anywhere in the API. An unknown account is deliberately
-answered with `403 account_not_found` instead of `404` - a 404 would let
+answered with `403 account_not_found` instead of `404` — a 404 would let
 attackers probe which account UUIDs exist.
 
-## `Origin` - a secondary check
+## `Origin` — a secondary check
 
 On the payment creation endpoints (`POST /payments/` and
 `POST /payments/split/`), if a request carries an `Origin` header, its host
@@ -75,7 +75,7 @@ On the payment creation endpoints (`POST /payments/` and
 the request fails with `403 domain_mismatch`. Other endpoints do not check
 `Origin`.
 
-Your server normally does not send `Origin` at all - browser requests do, which
+Your server normally does not send `Origin` at all — browser requests do, which
 is one more reason never to call the API from a browser. The check exists for
 integrations that forward it deliberately.
 
@@ -83,15 +83,15 @@ integrations that forward it deliberately.
 
 Every account carries a domain-reputation flag:
 
-- `is_safe: true` - the domain passed Google Safe Browsing checks.
-- `is_safe: false` - payment creation and split creation fail with
+- `is_safe: true` — the domain passed Google Safe Browsing checks.
+- `is_safe: false` — payment creation and split creation fail with
   `403 account_not_safe`, and `POST /x402/settle` also rejects the request.
   `GET /x402/merchant` only checks that the account exists. The dashboard shows
   the remediation steps on the account card
   ([Accounts](../dashboard/accounts.md)).
 
 `POST /payments/?sandbox=yes` bypasses the `is_safe` check and forces test
-values (network `amoy`, token `usdc`, `is_sandbox: true` in the payload) -
+values (network `amoy`, token `usdc`, `is_sandbox: true` in the payload) —
 see [Sandbox](../sandbox.md). The same applies to
 `POST /payments/split/?sandbox=yes`: sandbox splits are supported and use the
 Amoy split contract, so they return a payable `checkout_url` like any other
@@ -102,12 +102,12 @@ Amoy split contract is not configured.
 
 You may send an `X-Request-ID` header on any request. Error responses carry its
 value in the `request_id` field; if you do not send one, the server generates a
-UUID. Include `request_id` when contacting support - see
+UUID. Include `request_id` when contacting support — see
 [Errors](errors.md).
 
 ## Related sections
 
-- [Overview](overview.md) - base URL and conventions.
-- [Endpoints](endpoints.md) - endpoint map with per-endpoint auth.
-- [Errors](errors.md) - error envelope and codes.
-- [Security and privacy](../payments/security-and-privacy.md) - key handling rules.
+- [Overview](overview.md) — base URL and conventions.
+- [Endpoints](endpoints.md) — endpoint map with per-endpoint auth.
+- [Errors](errors.md) — error envelope and codes.
+- [Security and privacy](../payments/security-and-privacy.md) — key handling rules.

@@ -11,8 +11,8 @@ update, or delete accounts.
 with **Previous** / **Next** pagination.
 
 - Each account is an accordion row showing a safety badge and the domain:
-  - `Fine` - the domain passed the safety check;
-  - `Not Safe` - the domain is flagged, payments are rejected with **403**.
+  - `Fine` — the domain passed the safety check;
+  - `Not Safe` — the domain is flagged, payments are rejected with **403**.
 - Expanding a row shows the account card.
 - If you have no accounts, the dashboard sends you to
   [`/accounts/create/`](#creating-an-account) automatically.
@@ -23,7 +23,7 @@ with **Previous** / **Next** pagination.
 
 | Item               | What it shows                                                        |
 | ------------------ | -------------------------------------------------------------------- |
-| `ID`               | Account UUID - your API key, sent as `X-Account-Id`                   |
+| `ID`               | Account UUID — your API key, sent as `X-Account-Id`                   |
 | `EVM Wallet`       | Address that receives the net payment amount                         |
 | `Success URL`      | Where the customer lands after a successful payment                  |
 | `Fail URL`         | Where the customer lands after a failed payment                      |
@@ -44,7 +44,7 @@ Buttons on the card:
     The card prints the account UUID and the webhook secret **every time you
     open it**. Both are credentials: do not screen-share the card, and never
     paste either value into frontend code, logs, or public repositories. The
-    account UUID is the `X-Account-Id` header value and should live only in
+    account UUID is the `X-Account-Id` header value and must live only in
     server-side configuration.
 
 ## Creating an account
@@ -64,7 +64,7 @@ Fill in five fields:
 Two acknowledgment switches above the **Create** button must be turned on
 before the button becomes active. **Cancel** returns you to the accounts list.
 
-!!! success "You will see this confirmation"
+!!! success "The confirmation you see"
 
     `Merchant account created`
 
@@ -73,19 +73,19 @@ before the button becomes active. **Cancel** returns you to the accounts list.
 #### Domain
 
 - Normalized before saving: scheme, `www.`, and path are stripped, the value
-  is lowercased - `https://www.Example.com/shop` is stored as
+  is lowercased — `https://www.Example.com/shop` is stored as
   `example.com`. Keep `host:port` if you enter one.
-- Must be unique across the platform - otherwise `This domain already exists`.
+- Must be unique across the platform — otherwise `This domain already exists`.
 - Checked against Google Safe Browsing when the account is created; a flagged
   domain is rejected (see [error messages](#error-messages-you-may-see)).
 
 #### Callback URLs (`success_url`, `fail_url`, `status_url`)
 
 - Must use `http` or `https` and contain a host.
-- Hosts that are not reachable from the public internet - loopback, private,
-  link-local, and reserved addresses - are rejected. The URLs must be reachable
+- Hosts that are not reachable from the public internet — loopback, private,
+  link-local, and reserved addresses — are rejected. The URLs must be reachable
   by AneePay's servers.
-- These are pages on **your** site, not AneePay pages - see
+- These are pages on **your** site, not AneePay pages — see
   [Account setup](../getting-started/account-setup.md#account-fields).
 
 #### Wallet
@@ -116,17 +116,17 @@ before the button becomes active. **Cancel** returns you to the accounts list.
 
 ## Editing an account
 
-**`/accounts/<account_id>/update/`** - opened with **Edit** on the account
+**`/accounts/<account_id>/update/`** — opened with **Edit** on the account
 card. The same five fields and the same validation as creation; changes apply
 to future payments and webhooks.
 
-!!! success "You will see this confirmation"
+!!! success "The confirmation you see"
 
     `Account settings updated`
 
 !!! failure "Save rejected"
 
-    `Changes not saved. Please check your input` - fix the field errors shown
+    `Changes not saved. Please check your input` — fix the field errors shown
     in the form.
 
 Things you **cannot** change here:
@@ -142,7 +142,7 @@ Things you **cannot** change here:
 **`/accounts/<account_id>/delete/`**
 
 - **Delete Account** on the account card (and on a `Not Safe` card) removes
-  the account **immediately** - the button submits right away; there is no
+  the account **immediately** — the button submits right away; there is no
   confirmation dialog.
 - Opening the delete URL directly (**GET**) shows a confirmation page with the
   ID, domain, and wallet: **Confirm Delete** removes the account and returns
@@ -152,7 +152,7 @@ Things you **cannot** change here:
 
     Payment history and webhook delivery records are removed together with the
     account. CSV exports are generated on demand and are not stored, so download
-    any report you need **before** deleting - see
+    any report you need **before** deleting — see
     [Payments and export](payments-and-export.md).
 
 Account deletion is available in the dashboard; the API has no such endpoint.
@@ -162,7 +162,7 @@ An account you do not own returns **404** on both the edit and the delete URL.
 
 `is_safe` tells you the domain is not listed in known malicious-domain
 databases. Payments from an account with a `Not Safe` badge are rejected with
-**403** (sandbox requests are exempt - see [Sandbox](../sandbox.md)).
+**403** (sandbox requests are exempt — see [Sandbox](../sandbox.md)).
 
 - A newly created account can show `Not Safe` until the first automatic domain
   check records a result.
@@ -178,7 +178,7 @@ databases. Payments from an account with a `Not Safe` badge are rejected with
     3. Submit a review request in
        [Google Search Console](https://search.google.com/search-console/about)
        under **Security & Manual Actions -> Security Issues -> Request Review**.
-- Only **Delete Account** is available on a `Not Safe` card - you cannot edit
+- Only **Delete Account** is available on a `Not Safe` card — you cannot edit
   the account until the flag clears.
 
 If you believe the flag is a mistake, fix the site, wait for the next check
@@ -186,9 +186,9 @@ If you believe the flag is a mistake, fix the site, wait for the next check
 
 ## Related sections
 
-- [Account setup](../getting-started/account-setup.md) - field semantics for
+- [Account setup](../getting-started/account-setup.md) — field semantics for
   your integration (`Origin` check, signature verification, key rotation).
-- [Payments and export](payments-and-export.md) - what your accounts receive.
-- [Metrics](metrics.md) - per-account counters exposed by the dashboard.
-- [Security best practices](../security/best-practices.md) - keeping the
+- [Payments and export](payments-and-export.md) — what your accounts receive.
+- [Metrics](metrics.md) — per-account counters exposed by the dashboard.
+- [Security best practices](../security/best-practices.md) — keeping the
   account UUID and webhook secret safe.

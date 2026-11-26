@@ -22,7 +22,7 @@ decimals: [Networks, tokens, and fees](../payments/networks-tokens-fees.md).
 
 | Surface | Requirement |
 | --- | --- |
-| Hosted checkout | Any current browser that can run a wallet — the checkout discovers injected wallets via EIP-6963 |
+| Hosted checkout | Any current browser that can run a wallet — the checkout discovers injected wallets with EIP-6963 |
 | Tested wallet | MetaMask (browser extension and the mobile in-app browser) |
 | Payment calls | EIP-1193 provider; the checkout handles approvals, network switching, and gas estimation |
 | Server-side API calls | Any HTTP client — `curl`, `httpx`, `requests`, `fetch` |
