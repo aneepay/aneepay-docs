@@ -176,7 +176,7 @@ databases. Payments from an account with a `Not Safe` badge are rejected with
        Quttera), remove the malicious code, update the CMS and plugins, and
        change passwords.
     3. Submit a review request in
-       [Google Search Console](https://search.google.com/search-console)
+       [Google Search Console](https://search.google.com/search-console/about)
        under **Security & Manual Actions -> Security Issues -> Request Review**.
 - Only **Delete Account** is available on a `Not Safe` card - you cannot edit
   the account until the flag clears.

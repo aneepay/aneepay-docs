@@ -19,7 +19,7 @@ webhook never arrives, by the module's own status polling.
 | PrestaShop       | 1.7.0 or newer, 8.x supported (tested on 8.1.7)              |
 | PHP              | 7.4 or newer                                                |
 | AneePay account  | with a verified merchant domain, see [Account setup](../getting-started/account-setup.md) |
-| Store currency   | any, see [exchange rates](#exchange-rates)                   |
+| Store currency   | any, see [amount conversion](index.md#amount-conversion)     |
 
 The module ships English translations only.
 
