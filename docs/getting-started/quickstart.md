@@ -7,8 +7,8 @@ on-chain, and the net amount lands directly in your wallet.
 
 ## Prerequisites
 
-- An EVM wallet address that will receive funds (e.g. `0x…` from MetaMask).
-- Your site domain (used for the `Origin` check and domain safety verification).
+- An EVM wallet address that receives funds, for example `0x…` from MetaMask.
+- Your site domain (used for the `Origin` check and the `is_safe` check).
 - A backend you control — payment creation is **server-side only**.
 
 ## 1. Register and create an account
@@ -30,7 +30,7 @@ on-chain, and the net amount lands directly in your wallet.
 
 Full field reference and safety rules: [Account setup](account-setup.md).
 
-!!! note "Domain safety (`is_safe`)"
+!!! warning "Domain safety (`is_safe`)"
     New accounts start with `is_safe: false`. AneePay periodically checks your
     domain against Google Safe Browsing and flips the flag to `true`. Until
     then, production payments are rejected with **403** — either wait for the
@@ -189,9 +189,9 @@ Rules:
 curl "https://api.aneepay.com/payments/<payment-id>"
 ```
 
-`GET /payments/{id}` is public (no auth header). Check `status == "success"`
-and the confirmation flag. Polling is a fallback — webhooks are the primary
-channel.
+`GET /payments/{id}` is public (no auth header). Poll until `status` is
+`success` or `failed`: both are final, and only `success` means the money
+arrived. Polling is a fallback — webhooks are the primary channel.
 
 ## 5. Confirm the money arrived
 

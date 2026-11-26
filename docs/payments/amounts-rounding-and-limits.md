@@ -32,9 +32,12 @@ assert round_amount(Decimal("1.234")) == Decimal("1.23")
   above. The extra stored precision matters for machine-payment paths such as
   [x402](../x402/index.md), where sub-cent amounts are settled directly and do
   not pass through the checkout rounding.
-- API responses re-format stored values: minimum 2 digits, trailing zeros
-  stripped (`19.500000` → `19.50`). Values from machine-payment paths may retain
-  up to 6 decimals.
+- `amount` in API responses is re-formatted: at least two fraction digits,
+  trailing zeros stripped (`19.500000` → `19.50`, `10` → `10.00`).
+- `fee` and `net_amount` are on-chain arithmetic and keep **6 decimal places**:
+  a `19.50` USDT payment returns `"fee": "0.097500"` and
+  `"net_amount": "19.402500"`. Do not parse them as 2-decimal values, and do not
+  compare them with `amount` as strings.
 
 ## On-chain (the contract)
 

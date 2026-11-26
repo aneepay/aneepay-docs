@@ -73,7 +73,7 @@ Details and rationale: [Refunds, cancellations, and non-features](../payments/re
 | Channel | Direction | Notes |
 | --- | --- | --- |
 | Webhook to `status_url` | AneePay → you | Recommended. Sent **only** on transition to `success`, signed with `X-AneePay-Signature`. See [Webhooks](../webhooks/overview.md). |
-| `GET /payments/{id}` | You → AneePay | Public polling endpoint (no auth header). Returns status, confirmation flag, timings, `network`, `is_sandbox`. |
+| `GET /payments/{id}` | You → AneePay | Public polling endpoint (no auth header). Returns `status`, `is_confirmed`, timings, `network`, `is_sandbox`. |
 | `GET /accounts/{account_id}/payments` | You → AneePay | Authenticated list with filters — for reconciliation, not for real-time status. |
 | Browser redirect | dApp → customer | To your `success_url` / `fail_url`. Convenient, **not authoritative** — the customer may close the tab before it fires. |
 
