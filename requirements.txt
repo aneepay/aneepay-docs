@@ -1,5 +1,5 @@
 mkdocs>=1.6.1
-mkdocs-material>=9.8.0
+mkdocs-material>=9.8.2
 
 # Tooling that pip cannot install. Install it separately before running the
 # local checks; CI pins the same versions through the GitHub Actions.
