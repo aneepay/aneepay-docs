@@ -6,7 +6,7 @@ Polygon that accepts USDT, USDC, and DAI with a flat 0.5% on-chain fee.
 Built with [MkDocs](https://www.mkdocs.org/) and
 [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
 
-- **Live site:** <https://aneepay.github.io/aneepay-docs/>
+- **Live site:** <https://docs.aneepay.com/>
 - **LLM-friendly index:** [`docs/llms.txt`](docs/llms.txt)
 
 ## Contents

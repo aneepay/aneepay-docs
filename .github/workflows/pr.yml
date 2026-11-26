@@ -12,6 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
+      - name: Check canonical site URLs
+        run: |
+          if grep -rn "aneepay\.github\.io/aneepay-docs" docs README.md; then
+            echo "::error::Link to https://docs.aneepay.com, not the GitHub Pages address."
+            exit 1
+          fi
+
       - name: Lint Markdown files
         uses: DavidAnson/markdownlint-cli2-action@v24
         with:

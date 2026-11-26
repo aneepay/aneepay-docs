@@ -10,6 +10,12 @@ if ! curl -sS -o /dev/null --max-time 5 https://t.me/aneepay 2>/dev/null; then
   LYCHEE_ARGS=(--exclude 't\.me|telegram\.me')
 fi
 
+echo "== canonical site urls"
+if grep -rn "aneepay\.github\.io/aneepay-docs" docs README.md; then
+  echo "error: publish https://docs.aneepay.com, not the GitHub Pages address" >&2
+  exit 1
+fi
+
 echo "== mkdocs build --strict"
 mkdocs build --strict
 
