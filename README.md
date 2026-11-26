@@ -34,6 +34,17 @@ mkdocs serve          # http://127.0.0.1:8000
 mkdocs build --strict # production build into site/
 ```
 
+Two checks are not Python packages, so `pip install` does not fetch them.
+Install them once:
+
+```bash
+npm install -g markdownlint-cli2@0.19.1
+# lychee 0.24.2: download the binary for your platform from
+# https://github.com/lycheeverse/lychee/releases and put it on PATH.
+```
+
+The versions match CI and the pins in [`requirements.txt`](requirements.txt).
+
 ## Contributing
 
 1. Edit or add Markdown files under `docs/`.
@@ -42,10 +53,22 @@ mkdocs build --strict # production build into site/
 4. Run the same checks as CI before opening a PR:
 
 ```bash
+./scripts/check.sh
+```
+
+The script runs the strict build, `markdownlint-cli2`, and `lychee`. Run them one
+by one when you need to isolate a failure:
+
+```bash
 mkdocs build --strict
 markdownlint-cli2 "docs/**/*.md"
 lychee --config lychee.toml "docs/**/*.md"
 ```
+
+If your network cannot reach Telegram, `lychee` reports the `t.me` links as
+failures. `scripts/check.sh` detects that and skips them locally; a manual run
+needs `--exclude 't\.me|telegram\.me'`. Do not add the exclude to `lychee.toml`:
+the CI runners reach Telegram.
 
 CI runs on every pull request (Markdown lint, link check, strict build), and
 pushes to `main` deploy the site to GitHub Pages.

@@ -1,2 +1,10 @@
 mkdocs>=1.6.1
 mkdocs-material>=9.8.0
+
+# Tooling that pip cannot install. Install it separately before running the
+# local checks; CI pins the same versions through the GitHub Actions.
+#
+#   markdownlint-cli2  0.19.1  ->  npm install -g markdownlint-cli2@0.19.1
+#   lychee             0.24.2  ->  https://github.com/lycheeverse/lychee/releases
+#                                  (extract the binary into a directory on PATH,
+#                                   for example ~/.local/bin)
